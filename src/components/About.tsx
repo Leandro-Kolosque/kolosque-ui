@@ -1,34 +1,25 @@
-import { BookOpenCheck, FlaskConical, Repeat, TrendingUp } from "lucide-react";
+import AboutStage from "./AboutStage";
 
-const points = [
-  [BookOpenCheck, "Registro do que aprendo", "Cada experimento guarda a técnica, as dependências e uma nota pessoal."],
-  [FlaskConical, "Espaço para testar", "Controles ao vivo para mexer em velocidade, cor e intensidade."],
-  [Repeat, "Conhecimento reutilizável", "O código fica pronto para voltar em outros projetos."],
-  [TrendingUp, "Evolução visível", "O status mostra o que está pronto e o que ainda vem."],
-] as const;
+const delay = (ms: number) => ({ animationDelay: `${ms}ms` });
 
 export default function About() {
   return (
-    <section id="sobre" className="py-26">
-      <div className="wrap grid gap-12 lg:grid-cols-2">
+    <section id="sobre" className="relative overflow-hidden bg-bg">
+      <div aria-hidden className="absolute inset-0 [background-image:radial-gradient(circle,var(--dot)_1px,transparent_1px)] [background-size:24px_24px]" />
+      <div aria-hidden className="absolute inset-0 bg-[radial-gradient(ellipse_55%_60%_at_28%_50%,var(--bg)_40%,transparent_100%)]" />
+      <div className="wrap relative grid min-h-[calc(100svh-64px)] items-center gap-12 py-16 lg:grid-cols-2">
         <div>
-          <h2 className="h-display text-4xl tracking-[-2px] md:text-5xl">Um diário de aprendizado, escrito em código.</h2>
-          <div className="copy mt-8 space-y-4 text-muted">
-            <p>Comecei com HTML e CSS, copiando designs que eu admirava. Hoje refaço tudo com React, Tailwind e animações, entendendo cada decisão.</p>
-            <p>Este espaço não compete com bibliotecas prontas. Ele guarda o que aprendi, o que ainda estou testando e o que quero tentar a seguir.</p>
+          <h2 className="rise h-display text-5xl tracking-[-2px] md:text-7xl md:tracking-[-3px]">A personal archive of digital experiences.</h2>
+          <p className="rise copy mt-6 text-muted" style={delay(120)}>
+            Componentes, animações e experimentos de UI/UX que construí enquanto aprendia front-end.<br />
+            Cada um traz uma demo, o código e o que aprendi no caminho.
+          </p>
+          <div className="rise mt-8 flex flex-wrap gap-4" style={delay(240)}>
+            <a href="#biblioteca" className="btn btn-primary">Explorar biblioteca</a>
+            <a href="#jornada" className="btn btn-ghost">Ver a jornada</a>
           </div>
         </div>
-        <ul className="space-y-6">
-          {points.map(([Icon, title, text]) => (
-            <li key={title} className="flex gap-4">
-              <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary"><Icon size={24} /></span>
-              <div>
-                <h3 className="font-medium">{title}</h3>
-                <p className="mt-2 text-base leading-6 text-muted">{text}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <div className="rise" style={delay(360)}><AboutStage /></div>
       </div>
     </section>
   );

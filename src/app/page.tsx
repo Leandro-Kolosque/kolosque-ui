@@ -1,16 +1,26 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import About from "@/components/About";
 import Featured from "@/components/Featured";
 import Categories from "@/components/Categories";
-import About from "@/components/About";
+import Journey from "@/components/Journey";
 import Cta, { Footer } from "@/components/Cta";
 
 export default function Home() {
   return (
     <>
       <Navbar />
-      <main><Hero /><Featured /><Categories /><About /><Cta /></main>
-      <Footer />
+      <main>
+        <Hero />
+        <div className="relative z-10 bg-bg">
+          <About />
+          <Featured />
+          <Categories />
+          <Journey />
+          <Cta />
+          <Footer />
+        </div>
+      </main>
     </>
   );
 }

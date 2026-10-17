@@ -1,15 +1,164 @@
 @import "tailwindcss";
-:root{--bg:#F6F7FB;--surface:#fff;--ink:#12162B;--muted:#5A6078;--line:#E2E5F0;--primary:#3D52F0;--primary-fg:#fff;--dot:#C9CEE3}
-.dark{--bg:#0B0D17;--surface:#12152A;--ink:#ECEEF8;--muted:#9AA0BC;--line:#232844;--primary:#8C9BFF;--primary-fg:#0B0D17;--dot:#2A2F4E}
-@theme inline{--color-bg:var(--bg);--color-surface:var(--surface);--color-ink:var(--ink);--color-muted:var(--muted);--color-line:var(--line);--color-primary:var(--primary);--color-primary-fg:var(--primary-fg);--font-sans:"DM Sans Variable","DM Sans",system-ui,sans-serif;--font-display:"DM Serif Display",Georgia,serif}
-html{scroll-behavior:smooth;color-scheme:light}html.dark{color-scheme:dark}
-body{background:var(--bg);color:var(--ink);font-family:var(--font-sans)}
-.h-display{font-family:var(--font-display);font-weight:400;line-height:1}
-.copy{font-size:18px;line-height:27px;letter-spacing:0;max-width:640px}
-.wrap{@apply mx-auto w-full max-w-[1120px] px-6}
-.btn{@apply inline-flex h-12 items-center justify-center rounded-full px-8 text-[15px] font-medium tracking-[1px] transition duration-200 active:scale-[.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary}
-.btn-primary{@apply bg-primary text-primary-fg shadow-lg shadow-primary/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/30}
-.btn-ghost{@apply border border-line bg-surface text-ink hover:-translate-y-0.5 hover:border-ink/30}
-@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-.rise{animation:rise .8s cubic-bezier(.2,.7,.2,1) both}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+
+:root {
+    --bg: #F6F7FB;
+    --surface: #fff;
+    --ink: #12162B;
+    --muted: #5A6078;
+    --line: #E2E5F0;
+    --primary: #3D52F0;
+    --primary-fg: #fff;
+    --dot: #C9CEE3
+}
+
+.dark {
+    --bg: #0B0D17;
+    --surface: #12152A;
+    --ink: #ECEEF8;
+    --muted: #9AA0BC;
+    --line: #232844;
+    --primary: #8C9BFF;
+    --primary-fg: #0B0D17;
+    --dot: #2A2F4E
+}
+
+@theme inline {
+    --color-bg: var(--bg);
+    --color-surface: var(--surface);
+    --color-ink: var(--ink);
+    --color-muted: var(--muted);
+    --color-line: var(--line);
+    --color-primary: var(--primary);
+    --color-primary-fg: var(--primary-fg);
+    --font-sans: "DM Sans Variable", "DM Sans", system-ui, sans-serif;
+    --font-display: "DM Serif Display", Georgia, serif
+}
+
+html {
+    scroll-behavior: smooth;
+    color-scheme: light
+}
+
+html.dark {
+    color-scheme: dark
+}
+
+body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans)
+}
+
+.h-display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 1
+}
+
+.copy {
+    font-size: 18px;
+    line-height: 27px;
+    letter-spacing: 0;
+    max-width: 640px
+}
+
+.wrap {
+    @apply mx-auto w-full max-w-[1120px] px-6
+}
+
+.btn {
+    @apply inline-flex h-12 items-center justify-center rounded-full px-8 text-[15px] font-medium tracking-[1px] transition duration-200 active:scale-[.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
+}
+
+.btn-primary {
+    @apply bg-primary text-primary-fg shadow-lg shadow-primary/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/30
+}
+
+.btn-ghost {
+    @apply border border-line bg-surface text-ink hover:-translate-y-0.5 hover:border-ink/30
+}
+
+@keyframes rise {
+    from {
+        opacity: 0;
+        transform: translateY(16px)
+    }
+
+    to {
+        opacity: 1;
+        transform: none
+    }
+}
+
+.rise {
+    animation: rise .8s cubic-bezier(.2, .7, .2, 1) both
+}
+
+@media (prefers-reduced-motion:reduce) {
+    html {
+        scroll-behavior: auto
+    }
+
+    * {
+        animation: none !important;
+        transition: none !important
+    }
+}
+
+@media (prefers-reduced-motion:reduce) {
+    html {
+        scroll-behavior: auto
+    }
+
+    * {
+        animation: none !important;
+        transition: none !important
+    }
+}
+
+html {
+    scroll-padding-top: 64px
+}
+
+.scene-img {
+    object-position: var(--pos-m)
+}
+
+@media(min-width:768px) {
+    .scene-img {
+        object-position: var(--pos)
+    }
+}
+
+@keyframes marquee {
+    to {
+        transform: translateX(-50%)
+    }
+}
+
+.marquee {
+    animation: marquee 48s linear infinite
+}
+
+.marquee:hover {
+    animation-play-state: paused
+}
+
+.link-u {
+    position: relative
+}
+
+.link-u::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 -6px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .25s
+}
+
+.link-u:hover::after {
+    transform: scaleX(1)
+}
