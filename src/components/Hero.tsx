@@ -8,7 +8,7 @@ export default function Hero() {
       <HeroBackground />
       <div aria-hidden className="absolute inset-0 bg-[linear-gradient(90deg,rgb(11_13_23/.8),transparent_65%),linear-gradient(0deg,rgb(11_13_23/.92),transparent_55%)]" />
       <div className="relative flex h-full flex-col justify-end">
-        <div className="px-6 pb-10 md:px-10">
+        <div className="px-6 pb-12 md:px-10 md:pb-14">
           <p className="text-xs font-medium uppercase tracking-[2px] text-white/80">Arquivo pessoal de UI/UX</p>
           <h1 className="mt-4 font-display text-5xl leading-none tracking-[-2px] md:text-7xl md:tracking-[-3px] lg:text-[88px]">
             A playground<br />for interfaces.
