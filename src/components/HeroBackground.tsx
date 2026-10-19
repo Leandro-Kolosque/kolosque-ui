@@ -43,9 +43,9 @@ export default function HeroBackground() {
   return (
     <div ref={root} aria-hidden className="absolute inset-0 bg-[#0B0D17]">
       {scenes.map((s, i) => (
-        <div key={i} className="scene absolute inset-0 will-change-transform" style={{ opacity: i ? 0 : 1 }}>
+        <div key={i} className="scene absolute inset-0" style={{ opacity: i ? 0 : 1 }}>
           {s.src ? (
-            <Image src={s.src} alt="" fill quality={85} priority={i < 2} sizes="(max-width: 767px) 320vw, 100vw" className="scene-img object-cover"
+            <Image src={s.src} alt="" fill unoptimized priority={i < 2} className="scene-img object-cover"
               style={{ "--pos": s.position, "--pos-m": s.mobilePosition ?? s.position } as React.CSSProperties} />
           ) : (
             <div className="size-full" style={{ background: s.fallback }} />
