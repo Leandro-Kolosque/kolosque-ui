@@ -76,9 +76,9 @@ export default function Navbar() {
             <a href={nav.cta[1]} className="inline-flex h-10 items-center rounded-full bg-primary px-6 text-[13px] font-medium tracking-[1px] text-primary-fg transition hover:-translate-y-0.5 active:scale-[.97]">{nav.cta[0]}</a>
           </nav>
 
-          <button className="md:hidden" onClick={() => setMenu(!menu)} aria-label={menu ? "Fechar menu" : "Abrir menu"} aria-expanded={menu}>
-            {menu ? <X size={24} /> : <Menu size={24} />}
-          </button>
+         <button className="-mr-3 grid size-12 place-items-center md:hidden" onClick={() => setMenu(!menu)} aria-label={menu ? "Fechar menu" : "Abrir menu"} aria-expanded={menu}>
+  {menu ? <X size={32} /> : <Menu size={36} strokeWidth={2} />}
+</button>
         </div>
       </header>
 
