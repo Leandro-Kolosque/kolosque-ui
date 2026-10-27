@@ -4,6 +4,7 @@ import { ChevronDown, Menu, Search, X } from "lucide-react";
 import { ThemeToggle } from "./theme";
 import { experiments } from "@/data/components";
 import { nav } from "@/data/hero";
+import Link from "next/link";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -51,10 +52,10 @@ export default function Navbar() {
                 <ul className="absolute left-0 top-12 w-72 rounded-2xl border border-line bg-surface p-2 text-ink shadow-2xl">
                   {hits.map((e) => (
                     <li key={e.id}>
-                      <a href="#biblioteca" className="block rounded-xl px-4 py-2 hover:bg-primary/10">
+                      <Link href={e.href ?? "#biblioteca"} className="block rounded-xl px-4 py-2 hover:bg-primary/10">
                         <span className="block text-[15px] font-medium">{e.name}</span>
                         <span className="text-sm text-muted">{e.category}</span>
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -76,9 +77,9 @@ export default function Navbar() {
             <a href={nav.cta[1]} className="inline-flex h-10 items-center rounded-full bg-primary px-6 text-[13px] font-medium tracking-[1px] text-primary-fg transition hover:-translate-y-0.5 active:scale-[.97]">{nav.cta[0]}</a>
           </nav>
 
-         <button className="-mr-3 grid size-12 place-items-center md:hidden" onClick={() => setMenu(!menu)} aria-label={menu ? "Fechar menu" : "Abrir menu"} aria-expanded={menu}>
-  {menu ? <X size={32} /> : <Menu size={36} strokeWidth={2} />}
-</button>
+          <button className="-mr-3 grid size-12 place-items-center md:hidden" onClick={() => setMenu(!menu)} aria-label={menu ? "Fechar menu" : "Abrir menu"} aria-expanded={menu}>
+            {menu ? <X size={32} /> : <Menu size={36} strokeWidth={2} />}
+          </button>
         </div>
       </header>
 

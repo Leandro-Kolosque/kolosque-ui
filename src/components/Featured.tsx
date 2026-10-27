@@ -1,4 +1,5 @@
 import { experiments, statusDot, statusLabel, type Kind } from "@/data/components";
+import Link from "next/link";
 
 function Preview({ kind }: { kind: Kind }) {
   const wrap = "grid h-full place-items-center";
@@ -51,7 +52,8 @@ export default function Featured() {
         </p>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {experiments.map((e, i) => (
-            <article key={e.id} className={`group overflow-hidden rounded-3xl border border-line bg-surface shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl ${i === 0 ? "md:col-span-2" : ""}`}>
+            <article key={e.id} className={`group relative overflow-hidden rounded-3xl border border-line bg-surface shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl ${i === 0 ? "md:col-span-2" : ""}`}>
+              {e.href && <Link href={e.href} aria-label={`Abrir ${e.name}`} className="absolute inset-0 z-10 rounded-3xl focus-visible:outline-2 focus-visible:outline-primary" />}
               <div className="h-56 [background-image:radial-gradient(circle,var(--dot)_1px,transparent_1px)] [background-size:24px_24px]">
                 <Preview kind={e.kind} />
               </div>
