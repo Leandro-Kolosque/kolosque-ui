@@ -1,24 +1,26 @@
 "use client";
 import { useEffect, useState } from "react";
 import { ChevronDown, Menu, Search, X } from "lucide-react";
+import { useLenis } from "lenis/react";
 import { ThemeToggle } from "./theme";
 import { experiments } from "@/data/components";
 import { nav } from "@/data/hero";
 import Link from "next/link";
+
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menu, setMenu] = useState(false);
   const [q, setQ] = useState("");
   const [focus, setFocus] = useState(false);
+  const lenis = useLenis();
 
   useEffect(() => {
-    const f = () => setScrolled(scrollY > 32);
-    f();
-    addEventListener("scroll", f, { passive: true });
-    return () => removeEventListener("scroll", f);
-  }, []);
-  useEffect(() => { document.body.style.overflow = menu ? "hidden" : ""; }, [menu]);
+    document.body.style.overflow = menu ? "hidden" : "";
+    if (menu) lenis?.stop();
+    else lenis?.start();
+    return () => lenis?.start();
+  }, [menu, lenis]);
 
   const term = q.trim().toLowerCase();
   const hits = term ? experiments.filter((e) => [e.name, e.category, ...e.tech].join(" ").toLowerCase().includes(term)).slice(0, 5) : [];
@@ -87,7 +89,7 @@ export default function Navbar() {
         <div className="fixed inset-0 z-30 flex flex-col bg-bg px-6 pt-24 text-ink md:hidden">
           <nav className="flex flex-col gap-6 text-lg font-medium uppercase tracking-[1px]">
             {[...nav.about, ...nav.links].map(([label, href]) => (
-              <a key={href} href={href} onClick={() => setMenu(false)}>{label}</a>
+              <a key={href} href={href} onClick={() => { lenis?.start(); setMenu(false); }}>{label}</a>
             ))}
           </nav>
           <div className="mt-8 flex items-center justify-between border-t border-line pt-8">

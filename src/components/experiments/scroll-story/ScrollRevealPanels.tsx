@@ -21,14 +21,14 @@ export default function ScrollRevealPanels() {
       gsap.to(mount, {
         clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
         ease: "power2.inOut",
-        scrollTrigger: { trigger: section, start: "top 80%", end: "top 20%", scrub: 1 },
+        scrollTrigger: { trigger: section, start: "top 80%", end: "top 20%", scrub: true },
       });
 
       gsap.fromTo(text, { yPercent: 150, opacity: 0 }, {
         yPercent: -100,
         opacity: 1,
         ease: "none",
-        scrollTrigger: { trigger: section, start: "top bottom", end: "bottom top", scrub: 1 },
+        scrollTrigger: { trigger: section, start: "top bottom", end: "bottom top", scrub: true },
       });
 
       gsap.fromTo(img, { yPercent: -10 }, {
