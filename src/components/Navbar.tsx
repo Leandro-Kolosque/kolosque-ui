@@ -16,6 +16,13 @@ export default function Navbar() {
   const lenis = useLenis();
 
   useEffect(() => {
+    const f = () => setScrolled(scrollY > 32);
+    f();
+    addEventListener("scroll", f, { passive: true });
+    return () => removeEventListener("scroll", f);
+  }, []);
+
+  useEffect(() => {
     document.body.style.overflow = menu ? "hidden" : "";
     if (menu) lenis?.stop();
     else lenis?.start();
