@@ -34,6 +34,19 @@ function Preview({ kind }: { kind: Kind }) {
       </div>
     </div>
   );
+   if (kind === "helix") return (
+    <div className={`${wrap} [perspective:700px]`}>
+      <div className="relative size-0 transition duration-[1400ms] [transform-style:preserve-3d] [transform:rotateX(-12deg)_rotateY(0deg)] group-hover:[transform:rotateX(-12deg)_rotateY(180deg)]">
+        {[0, 1, 2, 3, 4, 5].map((i) => (
+          <div
+            key={i}
+            className="absolute -left-6 -top-8 h-16 w-12 rounded-lg bg-linear-to-br from-primary to-ink/60 shadow-lg"
+            style={{ transform: `translateY(${(i - 2.5) * 18}px) rotateY(${i * 60}deg) translateZ(84px)` }}
+          />
+        ))}
+      </div>
+    </div>
+  );
   return (
     <div className={wrap}>
       <span className="font-display text-6xl tracking-[-4px] transition-all duration-500 group-hover:tracking-[4px]">Aa</span>
@@ -42,6 +55,7 @@ function Preview({ kind }: { kind: Kind }) {
 }
 
 export default function Featured() {
+  const featured = experiments.filter((e) => e.featured);
   return (
     <section id="biblioteca" className="py-26">
       <div className="wrap">
@@ -51,7 +65,7 @@ export default function Featured() {
           O status mostra em que ponto do aprendizado cada um está.
         </p>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {experiments.map((e, i) => (
+          {featured.map((e, i) => (
             <article key={e.id} className={`group relative overflow-hidden rounded-3xl border border-line bg-surface shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl ${i === 0 ? "md:col-span-2" : ""}`}>
               {e.href && <Link href={e.href} aria-label={`Abrir ${e.name}`} className="absolute inset-0 z-10 rounded-3xl focus-visible:outline-2 focus-visible:outline-primary" />}
               <div className="h-56 [background-image:radial-gradient(circle,var(--dot)_1px,transparent_1px)] [background-size:24px_24px]">
