@@ -18,6 +18,6 @@ export const timing = { hold: 4.3, fade: 0.7, drift: 0.08 };
 
 export const nav = {
   about: [["Sobre o projeto", "#sobre"], ["Jornada", "#jornada"], ["GitHub", "https://github.com/Leandro-Kolosque"]],
-  links: [["Biblioteca", "#biblioteca"], ["Categorias", "#categorias"]],
+  links: [["Biblioteca", "/library"], ["Categorias", "#categorias"]],
   cta: ["GitHub", "https://github.com/Leandro-Kolosque"],
 };

@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { experiments } from "@/data/components";
 import ExperimentCard from "./ExperimentCard";
 
@@ -16,6 +18,9 @@ export default function Featured() {
             <ExperimentCard key={e.id} experiment={e} className={i === 0 ? "md:col-span-2" : ""} />
           ))}
         </div>
+        <Link href="/library" className="btn btn-ghost mt-12 gap-2">
+          Ver todos os experimentos <ArrowRight size={18} />
+        </Link>
       </div>
     </section>
   );

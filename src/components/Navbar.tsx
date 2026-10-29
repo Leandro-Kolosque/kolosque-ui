@@ -7,6 +7,7 @@ import { experiments } from "@/data/components";
 import { matchesQuery } from "@/lib/search";
 import { nav } from "@/data/hero";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 
 export default function Navbar() {
@@ -15,6 +16,7 @@ export default function Navbar() {
   const [q, setQ] = useState("");
   const [focus, setFocus] = useState(false);
   const lenis = useLenis();
+  const home = usePathname() === "/";
 
   useEffect(() => {
     const f = () => setScrolled(scrollY > 32);
@@ -31,7 +33,9 @@ export default function Navbar() {
   }, [menu, lenis]);
 
   const hits = q.trim() ? experiments.filter((e) => matchesQuery(e, q)).slice(0, 5) : [];
-  const solid = scrolled || menu;
+  const solid = !home || scrolled || menu;
+  // Fora da home, as âncoras (#sobre...) apontam para a landing.
+  const h = (href: string) => (home || !href.startsWith("#") ? href : `/${href}`);
 
   return (
     <>
@@ -39,7 +43,7 @@ export default function Navbar() {
         <div aria-hidden className={`pointer-events-none absolute inset-0 -z-10 bg-linear-to-b from-black/60 to-transparent transition-opacity duration-300 ${solid ? "opacity-0" : ""}`} />
         <div className="flex h-16 items-center justify-between gap-6 px-6 md:px-10">
           <div className="flex items-center gap-8">
-            <a href="#" className="font-display text-2xl tracking-[-1px]">Kolosque UI</a>
+            <a href={home ? "#" : "/"} className="font-display text-2xl tracking-[-1px]">Kolosque UI</a>
             <div className="relative hidden md:block">
               <label className={`flex h-10 w-64 items-center gap-2 rounded-full border px-4 backdrop-blur transition focus-within:border-primary ${solid ? "border-line bg-surface" : "border-white/20 bg-white/10"}`}>
                 <Search size={16} className="opacity-70" />
@@ -61,7 +65,7 @@ export default function Navbar() {
                 <ul className="absolute left-0 top-12 w-72 rounded-2xl border border-line bg-surface p-2 text-ink shadow-2xl">
                   {hits.map((e) => (
                     <li key={e.id}>
-                      <Link href={e.href ?? "#biblioteca"} className="block rounded-xl px-4 py-2 hover:bg-primary/10">
+                      <Link href={e.href ?? h("#biblioteca")} className="block rounded-xl px-4 py-2 hover:bg-primary/10">
                         <span className="block text-[15px] font-medium">{e.name}</span>
                         <span className="text-sm text-muted">{e.category}</span>
                       </Link>
@@ -77,11 +81,11 @@ export default function Navbar() {
               <button className="link-u flex items-center gap-1 uppercase">Sobre <ChevronDown size={14} /></button>
               <ul className="invisible absolute left-0 top-8 w-48 rounded-2xl border border-line bg-surface p-2 text-[15px] normal-case tracking-normal text-ink opacity-0 shadow-2xl transition group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
                 {nav.about.map(([label, href]) => (
-                  <li key={href}><a href={href} className="block rounded-xl px-4 py-2 hover:bg-primary/10">{label}</a></li>
+                  <li key={href}><a href={h(href)} className="block rounded-xl px-4 py-2 hover:bg-primary/10">{label}</a></li>
                 ))}
               </ul>
             </div>
-            {nav.links.map(([label, href]) => <a key={href} href={href} className="link-u">{label}</a>)}
+            {nav.links.map(([label, href]) => <a key={href} href={h(href)} className="link-u">{label}</a>)}
             <ThemeToggle />
             <a href={nav.cta[1]} className="inline-flex h-10 items-center rounded-full bg-primary px-6 text-[13px] font-medium tracking-[1px] text-primary-fg transition hover:-translate-y-0.5 active:scale-[.97]">{nav.cta[0]}</a>
           </nav>
@@ -96,7 +100,7 @@ export default function Navbar() {
         <div className="fixed inset-0 z-30 flex flex-col bg-bg px-6 pt-24 text-ink md:hidden">
           <nav className="flex flex-col gap-6 text-lg font-medium uppercase tracking-[1px]">
             {[...nav.about, ...nav.links].map(([label, href]) => (
-              <a key={href} href={href} onClick={() => { lenis?.start(); setMenu(false); }}>{label}</a>
+              <a key={href} href={h(href)} onClick={() => { lenis?.start(); setMenu(false); }}>{label}</a>
             ))}
           </nav>
           <div className="mt-8 flex items-center justify-between border-t border-line pt-8">
