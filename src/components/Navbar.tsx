@@ -4,6 +4,7 @@ import { ChevronDown, Menu, Search, X } from "lucide-react";
 import { useLenis } from "lenis/react";
 import { ThemeToggle } from "./theme";
 import { experiments } from "@/data/components";
+import { matchesQuery } from "@/lib/search";
 import { nav } from "@/data/hero";
 import Link from "next/link";
 
@@ -29,8 +30,7 @@ export default function Navbar() {
     return () => lenis?.start();
   }, [menu, lenis]);
 
-  const term = q.trim().toLowerCase();
-  const hits = term ? experiments.filter((e) => [e.name, e.category, ...e.tech].join(" ").toLowerCase().includes(term)).slice(0, 5) : [];
+  const hits = q.trim() ? experiments.filter((e) => matchesQuery(e, q)).slice(0, 5) : [];
   const solid = scrolled || menu;
 
   return (
