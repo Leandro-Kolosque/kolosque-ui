@@ -7,7 +7,7 @@ import { experiments } from "@/data/components";
 import { matchesQuery } from "@/lib/search";
 import { nav } from "@/data/hero";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 
 export default function Navbar() {
@@ -16,6 +16,7 @@ export default function Navbar() {
   const [q, setQ] = useState("");
   const [focus, setFocus] = useState(false);
   const lenis = useLenis();
+  const router = useRouter();
   const home = usePathname() === "/";
 
   useEffect(() => {
@@ -53,7 +54,13 @@ export default function Navbar() {
                   onFocus={() => setFocus(true)}
                   onBlur={() => setTimeout(() => setFocus(false), 120)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") location.hash = "biblioteca";
+                    if (e.key === "Enter") {
+                      // A /library lê o termo da URL; o campo daqui é limpo para não duplicar o da página.
+                      const term = q.trim();
+                      router.push(term ? `/library?${new URLSearchParams({ q: term })}` : "/library");
+                      setQ("");
+                      e.currentTarget.blur();
+                    }
                     if (e.key === "Escape") (e.target as HTMLInputElement).blur();
                   }}
                   placeholder="Buscar experimentos"
