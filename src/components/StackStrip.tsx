@@ -3,21 +3,18 @@ import { stack } from "@/data/stack";
 const row = [...stack, ...stack];
 const items = [...row, ...row];
 
+// Faixa fina de catálogo no rodapé da Hero: linha dourada, rótulo em mono e marquee.
 export default function StackStrip() {
   return (
-    <div className="px-6 pb-10 md:px-10 md:pb-20">
-      <p className="text-sm text-white/70 md:text-lg">Stack:</p>
-      <div className="mt-4 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_6%,#000_94%,transparent)] md:mt-6">
+    <div className="flex items-center gap-6 border-t border-gold/60 bg-bg/80 px-6 backdrop-blur-sm md:px-10">
+      <p className="shrink-0 font-mono text-[11px] uppercase tracking-[1.5px] text-muted md:text-xs">Stack</p>
+      <div className="min-w-0 flex-1 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_6%,#000_94%,transparent)]">
         <ul className="marquee flex w-max">
           {items.map(({ name, role, icon: Icon }, i) => (
-            <li key={i} aria-hidden={i >= stack.length} className="flex items-center gap-3 pr-16 md:gap-4 md:pr-28">
-              <span className="grid size-10 shrink-0 place-items-center rounded-full bg-white/10 text-white md:size-16">
-                <Icon className="size-5 md:size-8" />
-              </span>
-              <span>
-                <b className="block text-base font-semibold leading-5 md:text-2xl md:leading-8">{name}</b>
-                <span className="text-[13px] text-white/60 md:text-base">{role}</span>
-              </span>
+            <li key={i} aria-hidden={i >= stack.length} className="flex h-14 items-center gap-3 pr-12 md:h-16 md:pr-16">
+              <Icon className="size-4 shrink-0 text-accent md:size-5" />
+              <span className="text-sm font-medium md:text-[15px]">{name}</span>
+              <span className="font-mono text-[11px] uppercase tracking-[1px] text-muted">{role}</span>
             </li>
           ))}
         </ul>

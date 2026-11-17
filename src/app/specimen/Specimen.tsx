@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { ArrowRight, CornerDownRight } from "lucide-react";
 
-type Font = { name: string; note: string; className: string };
+type Font = { name: string; note: string; className: string; chosen?: boolean };
 type Mode = "light" | "dark";
 
 // Proposta inicial. `accent` é a cor de texto de destaque; `brand` é a cor de preenchimento.
@@ -28,8 +28,8 @@ function ratio(a: string, b: string) {
 
 export default function Specimen({ displays, monos }: { displays: Font[]; monos: Font[] }) {
   const [mode, setMode] = useState<Mode>("light");
-  const [display, setDisplay] = useState(0);
-  const [mono, setMono] = useState(0);
+  const [display, setDisplay] = useState(Math.max(0, displays.findIndex((f) => f.chosen)));
+  const [mono, setMono] = useState(Math.max(0, monos.findIndex((f) => f.chosen)));
   const p = palettes[mode];
   const D = displays[display].className;
   const M = monos[mono].className;
@@ -122,7 +122,7 @@ export default function Specimen({ displays, monos }: { displays: Font[]; monos:
             {displays.map((f, i) => (
               <article key={f.name} className={`grid gap-6 py-12 md:grid-cols-[200px_1fr] ${i === display ? "" : ""}`}>
                 <div>
-                  <p className={`${M} text-[12px] uppercase tracking-[1.5px]`}>{f.name}</p>
+                  <p className={`${M} text-[12px] uppercase tracking-[1.5px]`}>{f.name}{f.chosen && <span className="text-(--s-gold)"> · escolhida</span>}</p>
                   <p className="mt-1 text-sm text-(--s-muted)">{f.note}</p>
                   <button onClick={() => setDisplay(i)} className={`${M} mt-4 text-[12px] uppercase tracking-[1.5px] underline-offset-4 transition hover:text-(--s-accent) hover:underline active:opacity-70 ${i === display ? "text-(--s-accent)" : "text-(--s-muted)"}`}>
                     {i === display ? "✦ Em uso nas amostras" : "Usar nas amostras"}
@@ -151,7 +151,7 @@ export default function Specimen({ displays, monos }: { displays: Font[]; monos:
             {monos.map((f, i) => (
               <article key={f.name} className="grid gap-4 py-8 md:grid-cols-[200px_1fr] md:items-center">
                 <div>
-                  <p className="text-sm font-medium">{f.name}</p>
+                  <p className="text-sm font-medium">{f.name}{f.chosen && <span className="text-(--s-gold)"> · escolhida</span>}</p>
                   <p className="text-sm text-(--s-muted)">{f.note}</p>
                   <button onClick={() => setMono(i)} className={`mt-2 text-[12px] uppercase tracking-[1.5px] transition hover:text-(--s-accent) active:opacity-70 ${i === mono ? "text-(--s-accent)" : "text-(--s-muted)"}`}>
                     {i === mono ? "✦ Em uso" : "Usar"}
@@ -171,7 +171,11 @@ export default function Specimen({ displays, monos }: { displays: Font[]; monos:
         {/* Botões */}
         <section className="py-26">
           <Label m={M} n="04" t="Botões e links" />
-          <div className="mt-8 grid gap-px border border-(--s-line) bg-(--s-line) md:grid-cols-3">
+          <div className="mt-8 grid gap-px border border-(--s-line) bg-(--s-line) md:grid-cols-2">
+            <Variant m={M} title="✦ Retângulo com dobra (escolhido)">
+              <button className="fold fold-primary">Abrir a biblioteca <ArrowRight size={16} /></button>
+              <button className="fold fold-ghost">Ver no GitHub</button>
+            </Variant>
             <Variant m={M} title="Pílula (atual)">
               <button className="inline-flex h-12 items-center rounded-full bg-(--s-brand) px-8 text-[15px] font-medium tracking-[1px] text-(--s-brandFg) transition hover:-translate-y-0.5 hover:bg-(--s-brandHover) active:scale-[.97]">Abrir a biblioteca</button>
               <button className="inline-flex h-12 items-center rounded-full border border-(--s-line) px-8 text-[15px] font-medium tracking-[1px] transition hover:-translate-y-0.5 hover:border-(--s-ink) active:scale-[.97]">Ver no GitHub</button>

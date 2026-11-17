@@ -1,25 +1,38 @@
 @import "tailwindcss";
 
-:root {
-    --bg: #F6F7FB;
-    --surface: #fff;
-    --ink: #12162B;
-    --muted: #5A6078;
-    --line: #E2E5F0;
-    --primary: #3D52F0;
-    --primary-fg: #fff;
-    --dot: #C9CEE3
+/* Paleta marfim + bordô + dourado. As opções testadas ficam na /specimen.
+   primary: cor de preenchimento (botões, superfícies de destaque).
+   accent: cor de texto, ícones e foco em destaque. No escuro o bordô não tem contraste
+   sobre o fundo, então accent vira um rubi claro.
+   gold: só decoração (linhas, ornamentos, bordas). Não passa em contraste para texto pequeno. */
+/* .theme-light força a paleta clara num trecho da página (a Hero é sempre papel marfim). */
+:root,
+.theme-light {
+    --bg: #F9F1E7;
+    --surface: #FBF8F2;
+    --ink: #1E1412;
+    --muted: #6B5D57;
+    --line: #E3D9CB;
+    --primary: #6E1423;
+    --primary-hover: #8E1B2E;
+    --primary-fg: #F5F0E8;
+    --accent: #6E1423;
+    --gold: #A8833E;
+    --dot: #DCD1C0
 }
 
 .dark {
-    --bg: #0B0D17;
-    --surface: #12152A;
-    --ink: #ECEEF8;
-    --muted: #9AA0BC;
-    --line: #232844;
-    --primary: #8C9BFF;
-    --primary-fg: #0B0D17;
-    --dot: #2A2F4E
+    --bg: #17100F;
+    --surface: #211715;
+    --ink: #EDE4D3;
+    --muted: #A89A8C;
+    --line: #3A2B27;
+    --primary: #6E1423;
+    --primary-hover: #8A1C2E;
+    --primary-fg: #F5F0E8;
+    --accent: #E08A96;
+    --gold: #C9A55C;
+    --dot: #33262A
 }
 
 @theme inline {
@@ -29,9 +42,13 @@
     --color-muted: var(--muted);
     --color-line: var(--line);
     --color-primary: var(--primary);
+    --color-primary-hover: var(--primary-hover);
     --color-primary-fg: var(--primary-fg);
+    --color-accent: var(--accent);
+    --color-gold: var(--gold);
     --font-sans: "DM Sans Variable", "DM Sans", system-ui, sans-serif;
-    --font-display: "DM Serif Display", Georgia, serif
+    --font-display: "Playfair Display Variable", "Playfair Display", Georgia, serif;
+    --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace
 }
 
 html {
@@ -40,6 +57,11 @@ html {
 
 html.dark {
     color-scheme: dark
+}
+
+.theme-light {
+    color-scheme: light;
+    color: var(--ink)
 }
 
 body {
@@ -65,16 +87,106 @@ body {
     @apply mx-auto w-full max-w-[1120px] px-6
 }
 
-.btn {
-    @apply inline-flex h-12 items-center justify-center rounded-full px-8 text-[15px] font-medium tracking-[1px] transition duration-200 active:scale-[.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
+/* Botão com dobra de folha no canto superior direito.
+   ::before desenha a borda (forma cheia na cor da borda) e ::after o miolo, 1px para dentro,
+   com a aba da dobra e suas duas arestas. O recorte fica só nos pseudo-elementos para o
+   outline de foco não ser cortado. Fica em @layer components para utilitários (mt-*, gap-*)
+   poderem sobrescrever. */
+@property --fold {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: 12px
 }
 
-.btn-primary {
-    @apply bg-primary text-primary-fg shadow-lg shadow-primary/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/30
-}
+@layer components {
+    .btn {
+        --fold: 12px;
+        --edge: var(--ink);
+        --fill: var(--bg);
+        --flap: color-mix(in oklab, var(--ink) 10%, var(--bg));
+        position: relative;
+        isolation: isolate;
+        display: inline-flex;
+        height: 48px;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 0 28px;
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        white-space: nowrap;
+        color: var(--ink);
+        transition: --fold .25s cubic-bezier(.2, .7, .2, 1), transform .15s, color .2s
+    }
 
-.btn-ghost {
-    @apply border border-line bg-surface text-ink hover:-translate-y-0.5 hover:border-ink/30
+    .btn::before,
+    .btn::after {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        clip-path: polygon(0 0, calc(100% - var(--fold)) 0, 100% var(--fold), 100% 100%, 0 100%)
+    }
+
+    .btn::before {
+        inset: 0;
+        background: var(--edge);
+        transition: background .2s
+    }
+
+    .btn::after {
+        --g: calc(var(--fold) - 1px);
+        inset: 1px;
+        clip-path: polygon(0 0, calc(100% - var(--g) + .4px) 0, 100% calc(var(--g) - .4px), 100% 100%, 0 100%);
+        background:
+            linear-gradient(var(--edge), var(--edge)) right 0 top calc(var(--g) - 1px) / var(--g) 1px no-repeat,
+            linear-gradient(var(--edge), var(--edge)) right calc(var(--g) - 1px) top 0 / 1px var(--g) no-repeat,
+            linear-gradient(to bottom left, transparent 50%, var(--flap) 50%) right top / var(--g) var(--g) no-repeat,
+            var(--fill);
+        transition: background-color .2s
+    }
+
+    .btn:hover {
+        --fold: 16px
+    }
+
+    .btn:active {
+        transform: scale(.98)
+    }
+
+    .btn:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px
+    }
+
+    .btn-primary {
+        --edge: var(--gold);
+        --fill: var(--primary);
+        --flap: color-mix(in oklab, var(--gold) 75%, var(--primary));
+        color: var(--primary-fg)
+    }
+
+    .btn-primary:hover {
+        --fill: var(--primary-hover)
+    }
+
+    .btn-ghost:hover {
+        --edge: var(--gold);
+        color: var(--accent)
+    }
+
+    .btn-sm {
+        --fold: 10px;
+        height: 40px;
+        gap: 8px;
+        padding: 0 20px;
+        font-size: 12px
+    }
+
+    .btn-sm:hover {
+        --fold: 13px
+    }
 }
 
 @keyframes rise {
@@ -102,16 +214,13 @@ body {
         animation: none !important;
         transition: none !important
     }
-}
 
-@media (prefers-reduced-motion:reduce) {
-    html {
-        scroll-behavior: auto
+    .btn:hover {
+        --fold: 12px
     }
 
-    * {
-        animation: none !important;
-        transition: none !important
+    .btn-sm:hover {
+        --fold: 10px
     }
 }
 

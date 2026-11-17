@@ -41,7 +41,7 @@ export default function HeroBackground() {
   }, { scope: root });
 
   return (
-    <div ref={root} aria-hidden className="absolute inset-0 bg-[#0B0D17]">
+    <div ref={root} aria-hidden className="absolute inset-0 bg-bg">
       {scenes.map((s, i) => (
         <div key={i} className="scene absolute inset-0" style={{ opacity: i ? 0 : 1 }}>
           {s.src ? (

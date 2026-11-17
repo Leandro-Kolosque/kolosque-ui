@@ -12,6 +12,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [onHero, setOnHero] = useState(true);
   const [menu, setMenu] = useState(false);
   const [q, setQ] = useState("");
   const [focus, setFocus] = useState(false);
@@ -20,7 +21,11 @@ export default function Navbar() {
   const home = usePathname() === "/";
 
   useEffect(() => {
-    const f = () => setScrolled(scrollY > 32);
+    const f = () => {
+      setScrolled(scrollY > 32);
+      // A Hero é sticky; a seção seguinte alcança a barra quando o scroll passa de 100svh - 64px.
+      setOnHero(scrollY < innerHeight - 64);
+    };
     f();
     addEventListener("scroll", f, { passive: true });
     return () => removeEventListener("scroll", f);
@@ -34,19 +39,20 @@ export default function Navbar() {
   }, [menu, lenis]);
 
   const hits = q.trim() ? experiments.filter((e) => matchesQuery(e, q)).slice(0, 5) : [];
-  const solid = !home || scrolled || menu;
+  // Sobre a Hero (papel marfim) a barra usa a paleta clara mesmo no tema escuro.
+  const light = home && onHero && !menu;
+  const edge = !home || scrolled || menu;
   // Fora da home, as âncoras (#sobre...) apontam para a landing.
   const h = (href: string) => (home || !href.startsWith("#") ? href : `/${href}`);
 
   return (
     <>
-      <header className={`fixed inset-x-0 top-0 z-40 transition-colors duration-300 ${solid ? "border-b border-line bg-bg/90 text-ink backdrop-blur-md" : "text-white"}`}>
-        <div aria-hidden className={`pointer-events-none absolute inset-0 -z-10 bg-linear-to-b from-black/60 to-transparent transition-opacity duration-300 ${solid ? "opacity-0" : ""}`} />
+      <header className={`fixed inset-x-0 top-0 z-40 border-b bg-bg/90 text-ink backdrop-blur-md transition-colors duration-300 ${light ? "theme-light" : ""} ${edge ? "border-line" : "border-transparent"}`}>
         <div className="flex h-16 items-center justify-between gap-6 px-6 md:px-10">
           <div className="flex items-center gap-8">
             <a href={home ? "#" : "/"} className="font-display text-2xl tracking-[-1px]">Kolosque UI</a>
             <div className="relative hidden md:block">
-              <label className={`flex h-10 w-64 items-center gap-2 rounded-full border px-4 backdrop-blur transition focus-within:border-primary ${solid ? "border-line bg-surface" : "border-white/20 bg-white/10"}`}>
+              <label className={`flex h-10 w-64 items-center gap-2 rounded-full border px-4 border-line bg-surface transition focus-within:border-accent`}>
                 <Search size={16} className="opacity-70" />
                 <input
                   value={q}
@@ -65,14 +71,14 @@ export default function Navbar() {
                   }}
                   placeholder="Buscar experimentos"
                   aria-label="Buscar experimentos"
-                  className="w-full bg-transparent text-[15px] outline-none placeholder:opacity-60"
+                  className="w-full bg-transparent text-[15px] outline-none placeholder:text-muted"
                 />
               </label>
               {focus && hits.length > 0 && (
                 <ul className="absolute left-0 top-12 w-72 rounded-2xl border border-line bg-surface p-2 text-ink shadow-2xl">
                   {hits.map((e) => (
                     <li key={e.id}>
-                      <Link href={e.href ?? h("#biblioteca")} className="block rounded-xl px-4 py-2 hover:bg-primary/10">
+                      <Link href={e.href ?? h("#biblioteca")} className="block rounded-xl px-4 py-2 hover:bg-accent/10">
                         <span className="block text-[15px] font-medium">{e.name}</span>
                         <span className="text-sm text-muted">{e.category}</span>
                       </Link>
@@ -88,13 +94,13 @@ export default function Navbar() {
               <button className="link-u flex items-center gap-1 uppercase">Sobre <ChevronDown size={14} /></button>
               <ul className="invisible absolute left-0 top-8 w-48 rounded-2xl border border-line bg-surface p-2 text-[15px] normal-case tracking-normal text-ink opacity-0 shadow-2xl transition group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
                 {nav.about.map(([label, href]) => (
-                  <li key={href}><a href={h(href)} className="block rounded-xl px-4 py-2 hover:bg-primary/10">{label}</a></li>
+                  <li key={href}><a href={h(href)} className="block rounded-xl px-4 py-2 hover:bg-accent/10">{label}</a></li>
                 ))}
               </ul>
             </div>
             {nav.links.map(([label, href]) => <a key={href} href={h(href)} className="link-u">{label}</a>)}
             <ThemeToggle />
-            <a href={nav.cta[1]} className="inline-flex h-10 items-center rounded-full bg-primary px-6 text-[13px] font-medium tracking-[1px] text-primary-fg transition hover:-translate-y-0.5 active:scale-[.97]">{nav.cta[0]}</a>
+            <a href={nav.cta[1]} className="btn btn-primary btn-sm">{nav.cta[0]}</a>
           </nav>
 
           <button className="-mr-3 grid size-12 place-items-center md:hidden" onClick={() => setMenu(!menu)} aria-label={menu ? "Fechar menu" : "Abrir menu"} aria-expanded={menu}>
@@ -114,7 +120,7 @@ export default function Navbar() {
             <span className="text-muted">Tema</span>
             <ThemeToggle />
           </div>
-          <a href={nav.cta[1]} className="mt-8 grid h-12 place-items-center rounded-full bg-primary font-medium tracking-[1px] text-primary-fg">{nav.cta[0]}</a>
+          <a href={nav.cta[1]} className="btn btn-primary mt-8">{nav.cta[0]}</a>
         </div>
       )}
     </>

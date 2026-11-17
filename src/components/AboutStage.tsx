@@ -35,7 +35,7 @@ export default function AboutStage() {
       </div>
       <div style={layer(12)} className={`absolute bottom-0 left-8 ${move}`}>
         <div className="w-60 space-y-4 rounded-3xl border border-line bg-surface p-6 shadow-xl">
-          <p className="flex items-center gap-2 font-medium"><TrendingUp size={16} className="text-primary" />Progresso</p>
+          <p className="flex items-center gap-2 font-medium"><TrendingUp size={16} className="text-accent" />Progresso</p>
           <ul className="space-y-2 text-[15px]">
             {(Object.keys(statusLabel) as Status[]).map((s) => (
               <li key={s} className="flex items-center justify-between text-muted">

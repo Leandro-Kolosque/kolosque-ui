@@ -1,0 +1,89 @@
+/* Botão com dobra de folha no canto superior direito.
+   ::before desenha a borda (forma cheia na cor da borda) e ::after o miolo, 1px para dentro.
+   O recorte fica nos pseudo-elementos, então o outline de foco do botão não é cortado. */
+@property --f {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: 12px
+}
+
+.fold {
+    --f: 12px;
+    --edge: var(--s-ink);
+    --fill: var(--s-bg);
+    --flap: color-mix(in oklab, var(--s-ink) 10%, var(--s-bg));
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    height: 48px;
+    align-items: center;
+    gap: 12px;
+    padding: 0 28px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: --f .25s cubic-bezier(.2, .7, .2, 1), transform .15s, color .2s
+}
+
+.fold::before,
+.fold::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    clip-path: polygon(0 0, calc(100% - var(--f)) 0, 100% var(--f), 100% 100%, 0 100%)
+}
+
+.fold::before {
+    inset: 0;
+    background: var(--edge);
+    transition: background .2s
+}
+
+.fold::after {
+    --g: calc(var(--f) - 1px);
+    inset: 1px;
+    clip-path: polygon(0 0, calc(100% - var(--g) + .4px) 0, 100% calc(var(--g) - .4px), 100% 100%, 0 100%);
+    background:
+        linear-gradient(var(--edge), var(--edge)) right 0 top calc(var(--g) - 1px) / var(--g) 1px no-repeat,
+        linear-gradient(var(--edge), var(--edge)) right calc(var(--g) - 1px) top 0 / 1px var(--g) no-repeat,
+        linear-gradient(to bottom left, transparent 50%, var(--flap) 50%) right top / var(--g) var(--g) no-repeat,
+        var(--fill);
+    transition: background-color .2s
+}
+
+.fold:hover {
+    --f: 16px
+}
+
+.fold:active {
+    transform: scale(.98)
+}
+
+.fold:focus-visible {
+    outline: 2px solid var(--s-accent);
+    outline-offset: 3px
+}
+
+.fold-primary {
+    --edge: var(--s-gold);
+    --fill: var(--s-brand);
+    --flap: color-mix(in oklab, var(--s-gold) 75%, var(--s-brand));
+    color: var(--s-brandFg)
+}
+
+.fold-primary:hover {
+    --fill: var(--s-brandHover)
+}
+
+.fold-ghost:hover {
+    --edge: var(--s-gold);
+    color: var(--s-accent)
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fold:hover {
+        --f: 12px
+    }
+}

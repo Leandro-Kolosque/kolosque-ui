@@ -12,7 +12,7 @@ export default function Categories() {
         <ul className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
           {categories.map(({ id, name, blurb, icon: Icon }) => (
             <li key={id} className="group">
-              <span className="grid size-12 place-items-center rounded-2xl bg-primary/10 text-primary transition group-hover:bg-primary group-hover:text-primary-fg">
+              <span className="grid size-12 place-items-center rounded-2xl bg-accent/10 text-accent transition group-hover:bg-primary group-hover:text-primary-fg">
                 <Icon size={24} />
               </span>
               <h3 className="mt-4 font-medium">{name}</h3>

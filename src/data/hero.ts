@@ -1,16 +1,17 @@
-// Troque `src` por "/hero/scene-1.webp" etc. quando as artes estiverem em public/hero/.
-// Sem `src`, a cena usa o gradiente provisório de `fallback`.
+// Gravuras em marfim (2000×1116, assunto no terço direito). Sem `src`, a cena usa o gradiente de `fallback`.
+// position: desktop, puxada para a direita para o corte sair do lado vazio.
+// mobilePosition: centraliza o objeto no recorte estreito do celular.
 export type Scene = { src?: string; fallback: string; position: string; mobilePosition?: string };
 
-const glow = (x: number, c: string) => `radial-gradient(60% 80% at ${x}% 45%,${c},transparent 70%),#0B0D17`;
+const glow = (x: number) => `radial-gradient(30% 45% at ${x}% 50%,#6E142333,transparent 70%),#F9F1E7`;
 
 export const scenes: Scene[] = [
-  // 1 Componentes | 2 Experimentos 3D | 3 Origem (código) | 4 Movimento | 5 Jornada
-  { src: "/hero/scene-1.webp", fallback: glow(70, "#3D52F0aa"), position: "70% 50%", mobilePosition: "77% 50%" },
-  { src: "/hero/scene-2.webp", fallback: glow(72, "#5B3DF0aa"), position: "72% 50%", mobilePosition: "80% 50%" },
-  { src: "/hero/scene-3.webp", fallback: glow(73, "#8C9BFFaa"), position: "73% 50%", mobilePosition: "81% 50%" },
-  { src: "/hero/scene-4.webp", fallback: glow(74, "#2A6DF0aa"), position: "74% 50%", mobilePosition: "82% 50%" },
-  { src: "/hero/scene-5.webp", fallback: glow(72, "#A78BFAaa"), position: "72% 50%", mobilePosition: "80% 50%" },
+  // 1 Componentes (pedestal) | 2 Experimentos 3D (lajes) | 3 Origem (coluna) | 4 Movimento (esfera) | 5 Jornada (caderno)
+  { src: "/hero/scene-1.webp", fallback: glow(74), position: "80% 50%", mobilePosition: "82% 50%" },
+  { src: "/hero/scene-2.webp", fallback: glow(71), position: "80% 50%", mobilePosition: "78% 50%" },
+  { src: "/hero/scene-3.webp", fallback: glow(70), position: "80% 50%", mobilePosition: "77% 50%" },
+  { src: "/hero/scene-4.webp", fallback: glow(75), position: "80% 50%", mobilePosition: "84% 50%" },
+  { src: "/hero/scene-5.webp", fallback: glow(73), position: "80% 50%", mobilePosition: "80% 50%" },
 ];
 
 // hold: segundos parada; fade: crossfade; drift: zoom lento por cena (0 = desligado, como no vídeo).

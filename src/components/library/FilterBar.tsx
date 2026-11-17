@@ -9,7 +9,7 @@ const usedCategories = categories.filter((c) => experiments.some((e) => e.catego
 const allTech = [...new Set(experiments.flatMap((e) => e.tech))].sort((a, b) => a.localeCompare(b));
 
 const select =
-  "h-12 rounded-full border border-line bg-surface px-5 text-[15px] text-ink transition hover:border-ink/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
+  "h-12 rounded-full border border-line bg-surface px-5 text-[15px] text-ink transition hover:border-ink/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
 
 function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: ReactNode }) {
   return (
@@ -17,8 +17,8 @@ function Chip({ active, onClick, children }: { active: boolean; onClick: () => v
       type="button"
       aria-pressed={active}
       onClick={onClick}
-      className={`h-9 rounded-full border px-4 text-sm transition active:scale-[.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
-        active ? "border-primary bg-primary/10 text-primary" : "border-line text-muted hover:border-ink/30 hover:text-ink"
+      className={`h-9 rounded-full border px-4 text-sm transition active:scale-[.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+        active ? "border-accent bg-accent/10 text-accent" : "border-line text-muted hover:border-ink/30 hover:text-ink"
       }`}
     >
       {children}
@@ -48,7 +48,7 @@ export default function FilterBar({ filters, onText, onChange }: Props) {
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-4 md:flex-row">
-        <label className="flex h-12 flex-1 items-center gap-3 rounded-full border border-line bg-surface px-5 transition focus-within:border-primary">
+        <label className="flex h-12 flex-1 items-center gap-3 rounded-full border border-line bg-surface px-5 transition focus-within:border-accent">
           <Search size={18} className="shrink-0 text-muted" />
           <input
             value={filters.q}

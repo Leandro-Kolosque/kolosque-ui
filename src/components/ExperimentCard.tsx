@@ -57,7 +57,7 @@ export function ExperimentPreview({ kind }: { kind: Kind }) {
 export default function ExperimentCard({ experiment: e, className = "" }: { experiment: Experiment; className?: string }) {
   return (
     <article className={`group relative overflow-hidden rounded-3xl border border-line bg-surface shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl ${className}`}>
-      {e.href && <Link href={e.href} aria-label={`Abrir ${e.name}`} className="absolute inset-0 z-10 rounded-3xl focus-visible:outline-2 focus-visible:outline-primary" />}
+      {e.href && <Link href={e.href} aria-label={`Abrir ${e.name}`} className="absolute inset-0 z-10 rounded-3xl focus-visible:outline-2 focus-visible:outline-accent" />}
       <div className="h-56 bg-[radial-gradient(circle,var(--dot)_1px,transparent_1px)] bg-size-[24px_24px]">
         <ExperimentPreview kind={e.kind} />
       </div>
@@ -70,7 +70,7 @@ export default function ExperimentCard({ experiment: e, className = "" }: { expe
         </div>
         <p className="text-base leading-6 text-muted">{e.interaction}</p>
         <ul className="flex flex-wrap gap-2 text-sm">
-          <li className="rounded-full bg-primary/10 px-4 py-1 text-primary">{e.category}</li>
+          <li className="rounded-full bg-accent/10 px-4 py-1 text-accent">{e.category}</li>
           {e.tech.map((t) => <li key={t} className="rounded-full border border-line px-4 py-1 text-muted">{t}</li>)}
         </ul>
       </div>

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/theme";
 import "@fontsource-variable/dm-sans";
-import "@fontsource/dm-serif-display";
+import "@fontsource-variable/playfair-display";
+import "@fontsource-variable/playfair-display/wght-italic.css";
+import "@fontsource-variable/jetbrains-mono";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import "lenis/dist/lenis.css"; 

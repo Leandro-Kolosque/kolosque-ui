@@ -21,7 +21,7 @@ export default function Journey() {
         <ul className="space-y-6">
           {points.map(([Icon, title, text]) => (
             <li key={title} className="flex gap-4">
-              <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary"><Icon size={24} /></span>
+              <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-accent/10 text-accent"><Icon size={24} /></span>
               <div>
                 <h3 className="font-medium">{title}</h3>
                 <p className="mt-2 text-base leading-6 text-muted">{text}</p>
