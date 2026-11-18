@@ -42,7 +42,7 @@ export default function Navbar() {
   // Sobre a Hero (papel marfim) a barra usa a paleta clara mesmo no tema escuro.
   const light = home && onHero && !menu;
   const edge = !home || scrolled || menu;
-  // Fora da home, as âncoras (#sobre...) apontam para a landing.
+  // Fora da home, as âncoras (#pinacoteca...) apontam para a landing.
   const h = (href: string) => (home || !href.startsWith("#") ? href : `/${href}`);
 
   return (

@@ -18,7 +18,8 @@ export const scenes: Scene[] = [
 export const timing = { hold: 4.3, fade: 0.7, drift: 0.08 };
 
 export const nav = {
-  about: [["Sobre o projeto", "#sobre"], ["Jornada", "#jornada"], ["GitHub", "https://github.com/Leandro-Kolosque"]],
-  links: [["Biblioteca", "/library"], ["Categorias", "#categorias"]],
+  // Capítulos da landing (ver BRIEF.md). "Biblioteca" leva direto ao acervo completo.
+  about: [["Quem sou", "#ordens"], ["Jornada", "#jornada"], ["GitHub", "https://github.com/Leandro-Kolosque"]],
+  links: [["Pinacoteca", "#pinacoteca"], ["Biblioteca", "/library"], ["Contato", "#contato"]],
   cta: ["GitHub", "https://github.com/Leandro-Kolosque"],
 };

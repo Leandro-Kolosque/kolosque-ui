@@ -2,13 +2,15 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { experiments } from "@/data/components";
 import ExperimentCard from "./ExperimentCard";
+import ChapterHead from "./ChapterHead";
 
 export default function Featured() {
   const featured = experiments.filter((e) => e.featured);
   return (
     <section id="biblioteca" className="py-26">
       <div className="wrap">
-        <h2 className="h-display text-4xl tracking-[-2px] md:text-5xl">Experimentos em destaque</h2>
+        <ChapterHead n="02" title="Biblioteca" greek="ΒΙΒΛΙΟΘΗΚΗ" />
+        <h2 className="h-display mt-12 text-4xl tracking-[-2px] md:text-5xl">Experimentos em destaque</h2>
         <p className="copy mt-4 text-muted">
           Cada prévia reage ao mouse, como o componente real vai reagir.<br />
           O status mostra em que ponto do aprendizado cada um está.
