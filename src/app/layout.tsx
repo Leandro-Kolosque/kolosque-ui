@@ -6,7 +6,8 @@ import "@fontsource-variable/playfair-display/wght-italic.css";
 import "@fontsource-variable/jetbrains-mono";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
-import "lenis/dist/lenis.css"; 
+import Reveals from "@/components/Reveals";
+import "lenis/dist/lenis.css";
 
 export const metadata: Metadata = {
   title: "Kolosque UI — um arquivo pessoal de experiências digitais",
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body><SmoothScroll /><ThemeProvider>{children}</ThemeProvider></body>
+      <body><SmoothScroll /><Reveals /><ThemeProvider>{children}</ThemeProvider></body>
     </html>
   );
 }

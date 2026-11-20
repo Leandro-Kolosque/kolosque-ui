@@ -7,22 +7,27 @@ import ChapterHead from "./ChapterHead";
 export default function Featured() {
   const featured = experiments.filter((e) => e.featured);
   return (
-    <section id="biblioteca" className="py-26">
+    <section id="biblioteca" data-chapter="02" data-title="Biblioteca" className="py-26">
       <div className="wrap">
         <ChapterHead n="02" title="Biblioteca" greek="ΒΙΒΛΙΟΘΗΚΗ" />
-        <h2 className="h-display mt-12 text-4xl tracking-[-2px] md:text-5xl">Experimentos em destaque</h2>
-        <p className="copy mt-4 text-muted">
+        <h2 data-reveal="words" className="h-display mt-12 text-4xl tracking-[-2px] md:text-5xl">Experimentos em destaque</h2>
+        <p data-reveal="up" className="copy mt-4 text-muted">
           Cada prévia reage ao mouse, como o componente real vai reagir.<br />
           O status mostra em que ponto do aprendizado cada um está.
         </p>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
+          {/* O wrapper leva a revelação; o card é o mesmo da /library, onde a lista muda com os filtros e não deve ser revelada. */}
           {featured.map((e, i) => (
-            <ExperimentCard key={e.id} experiment={e} className={i === 0 ? "md:col-span-2" : ""} />
+            <div key={e.id} data-reveal="up" className={i === 0 ? "md:col-span-2" : ""}>
+              <ExperimentCard experiment={e} className="h-full" />
+            </div>
           ))}
         </div>
-        <Link href="/library" className="btn btn-ghost mt-12 gap-2">
-          Ver todos os experimentos <ArrowRight size={18} />
-        </Link>
+        <div data-reveal="up" className="mt-12">
+          <Link href="/library" className="btn btn-ghost gap-2">
+            Ver todos os experimentos <ArrowRight size={18} />
+          </Link>
+        </div>
       </div>
     </section>
   );

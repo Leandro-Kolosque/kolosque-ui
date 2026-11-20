@@ -3,7 +3,7 @@
 // mobilePosition: centraliza o objeto no recorte estreito do celular.
 export type Scene = { src?: string; fallback: string; position: string; mobilePosition?: string };
 
-const glow = (x: number) => `radial-gradient(30% 45% at ${x}% 50%,#6E142333,transparent 70%),#F9F1E7`;
+const glow = (x: number) => `radial-gradient(30% 45% at ${x}% 50%,#6E142333,transparent 70%),var(--bg)`;
 
 export const scenes: Scene[] = [
   // 1 Componentes (pedestal) | 2 Experimentos 3D (lajes) | 3 Origem (coluna) | 4 Movimento (esfera) | 5 Jornada (caderno)

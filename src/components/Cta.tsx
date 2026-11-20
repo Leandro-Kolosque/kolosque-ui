@@ -1,13 +1,16 @@
 import Link from "next/link";
 import ChapterHead from "./ChapterHead";
+import Lyra from "./temple/Lyra";
 
 export default function Cta() {
   return (
-    <section id="contato" className="pb-26">
+    <section id="contato" data-chapter="04" data-title="Epílogo" className="pb-26">
       <div className="wrap">
         <ChapterHead n="04" title="Epílogo" greek="ΕΠΙΛΟΓΟΣ" className="mb-12" />
-        <div className="relative overflow-hidden rounded-3xl border border-line bg-surface px-8 py-16 text-center shadow-sm md:py-26">
+        <div data-reveal="up" className="relative overflow-hidden rounded-3xl border border-line bg-surface px-8 py-16 text-center shadow-sm md:py-26">
           <div aria-hidden className="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_50%_0%,color-mix(in_srgb,var(--primary)_16%,transparent),transparent)]" />
+          {/* À noite, a lira das Musas aparece no céu do Epílogo. */}
+          <Lyra className="pointer-events-none absolute right-8 top-8 hidden w-28 md:dark:block lg:right-12 lg:top-10 lg:w-36" />
           <div className="relative">
             <h2 className="h-display mx-auto max-w-160 text-4xl tracking-[-2px] md:text-5xl">Veja o que já saiu do papel.</h2>
             <p className="copy mx-auto mt-4 text-muted">

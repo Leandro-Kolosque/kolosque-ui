@@ -12,15 +12,15 @@ export default function Journey() {
     <section id="jornada" className="py-26">
       <div className="wrap grid gap-12 lg:grid-cols-2">
         <div>
-          <h2 className="h-display text-4xl tracking-[-2px] md:text-5xl">Um diário de aprendizado, escrito em código.</h2>
-          <div className="copy mt-8 space-y-4 text-muted">
+          <h2 data-reveal="words" className="h-display text-4xl tracking-[-2px] md:text-5xl">Um diário de aprendizado, escrito em código.</h2>
+          <div data-reveal="up" className="copy mt-8 space-y-4 text-muted">
             <p>Comecei com HTML e CSS, copiando designs que eu admirava. Hoje refaço tudo com React, Tailwind e animações, entendendo cada decisão.</p>
             <p>Este espaço não compete com bibliotecas prontas. Ele guarda o que aprendi, o que ainda estou testando e o que quero tentar a seguir.</p>
           </div>
         </div>
         <ul className="space-y-6">
           {points.map(([Icon, title, text]) => (
-            <li key={title} className="flex gap-4">
+            <li key={title} data-reveal="up" className="flex gap-4">
               <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-accent/10 text-accent"><Icon size={24} /></span>
               <div>
                 <h3 className="font-medium">{title}</h3>

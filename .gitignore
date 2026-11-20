@@ -3,3 +3,7 @@ node_modules
 next-env.d.ts
 *.tsbuildinfo
 .env*
+
+# Originais e referências de design (as versões usadas no site ficam em public/)
+images/
+design/

@@ -1,13 +1,14 @@
 @import "tailwindcss";
 
+/* Variante dark: segue a classe .dark que o next-themes põe no <html>. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Paleta marfim + bordô + dourado. As opções testadas ficam na /specimen.
    primary: cor de preenchimento (botões, superfícies de destaque).
    accent: cor de texto, ícones e foco em destaque. No escuro o bordô não tem contraste
    sobre o fundo, então accent vira um rubi claro.
    gold: só decoração (linhas, ornamentos, bordas). Não passa em contraste para texto pequeno. */
-/* .theme-light força a paleta clara num trecho da página (a Hero é sempre papel marfim). */
-:root,
-.theme-light {
+:root {
     --bg: #F9F1E7;
     --surface: #FBF8F2;
     --ink: #1E1412;
@@ -57,11 +58,6 @@ html {
 
 html.dark {
     color-scheme: dark
-}
-
-.theme-light {
-    color-scheme: light;
-    color: var(--ink)
 }
 
 body {
@@ -189,25 +185,20 @@ body {
     }
 }
 
-@keyframes rise {
-    from {
-        opacity: 0;
-        transform: translateY(16px)
+/* Revelações por scroll (Reveals.tsx). Escondidos só quando o navegador executa JS; o GSAP mostra cada um ao entrar na tela. */
+@media (scripting: enabled) {
+    [data-reveal] {
+        visibility: hidden
     }
-
-    to {
-        opacity: 1;
-        transform: none
-    }
-}
-
-.rise {
-    animation: rise .8s cubic-bezier(.2, .7, .2, 1) both
 }
 
 @media (prefers-reduced-motion:reduce) {
     html {
         scroll-behavior: auto
+    }
+
+    [data-reveal] {
+        visibility: visible !important
     }
 
     * {
@@ -232,10 +223,37 @@ html {
     object-position: var(--pos-m)
 }
 
+/* Hero à noite: a gravura vira negativo (traço claro sobre escuro). O hue-rotate devolve os matizes depois da inversão:
+   o bordô vira um rosa antigo e o ouro continua ouro. Brilho e saturação contidos para a mancha não gritar. */
+.dark .scene-img {
+    filter: invert(1) hue-rotate(180deg) brightness(.82) saturate(.7) sepia(.15)
+}
+
 @media(min-width:768px) {
     .scene-img {
         object-position: var(--pos)
     }
+}
+
+/* Templo à noite (tema escuro). */
+/* Tochas: luz quente que treme de leve, sem ritmo regular. */
+@keyframes torch {
+    0%, 100% { opacity: 1 }
+    18% { opacity: .8 }
+    40% { opacity: .95 }
+    58% { opacity: .74 }
+    80% { opacity: .9 }
+}
+
+/* Estrelas da constelação no Epílogo. */
+@keyframes twinkle {
+    0%, 100% { opacity: 1 }
+    50% { opacity: .35 }
+}
+
+/* O dourado do trilho de capítulos brilha como metal à luz de tocha. */
+.dark .col-gild {
+    filter: drop-shadow(0 0 4px color-mix(in srgb, var(--gold) 55%, transparent))
 }
 
 @keyframes marquee {

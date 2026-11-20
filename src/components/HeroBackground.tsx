@@ -52,6 +52,9 @@ export default function HeroBackground() {
           )}
         </div>
       ))}
+      {/* À noite as gravuras são invertidas (globals.css › .scene-img) e o papel fica em #0E0A04, mais escuro que o fundo.
+          O "lighten" pega o maior valor de cada canal: só os tons mais escuros sobem até a cor do fundo; o traço não muda. */}
+      <div className="absolute inset-0 hidden bg-bg mix-blend-lighten dark:block" />
     </div>
   );
 }

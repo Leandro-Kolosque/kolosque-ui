@@ -87,18 +87,23 @@ As colunas são desenhadas em SVG próprio (nítido, leve e sensível ao tema), 
 ## Dia e noite
 
 - **Tema claro:** o templo ao sol. Papel marfim, nanquim, bordô.
-- **Tema escuro:** o mesmo templo à noite. Quase-preto quente, dourado mais presente (tochas),
-  bordô como superfície. Hoje o hero é marfim nos dois temas; uma versão noturna das gravuras
-  fica para uma fase futura.
-- Recortes de gravura são nanquim sobre papel: no claro, `mix-blend-mode: multiply` faz o papel
-  sumir; no escuro, é preciso uma versão com transparência ou com traço claro.
+- **Tema escuro:** o mesmo templo à noite. Quase-preto quente, dourado mais presente, bordô como
+  superfície. O que só existe à noite:
+  - **Hero em negativo:** as gravuras são invertidas por CSS (traço claro sobre escuro, a mancha
+    bordô vira rosa antigo) e uma camada em `mix-blend-mode: lighten` leva o papel invertido
+    exatamente à cor do fundo. Se um dia houver gravuras noturnas próprias, elas substituem o filtro.
+  - **Tochas:** luz quente e trêmula atrás das relíquias de cada capítulo.
+  - **Dourado iluminado:** brilho nas caneluras do trilho e linhas de capítulo em dourado pleno.
+  - **Lyra:** a constelação da lira das Musas, com as posições reais das estrelas, no Epílogo.
+- Os recortes das relíquias já vêm com transparência e preenchimento de mármore, então funcionam
+  nos dois temas sem tratamento.
 
 ## Imagens
 
 - **Cenas do hero:** cinco gravuras 2000×1116 em WebP, até ~200 KB cada (`public/hero/`).
-- **Recortes a gerar:** capitel jônico quebrado, tambor de coluna, ramo de oliveira, fragmentos
-  de mármore, rolo de papiro, lira (as Musas). Mesmo estilo de gravura do hero, objeto isolado
-  sobre marfim liso. WebP com transparência quando possível.
+- **Relíquias:** capitel jônico, tambor de coluna, ramo de oliveira, fragmentos, pergaminho e lira
+  (`public/temple/`), WebP com transparência, margens cortadas e até ~150 KB cada. Os originais
+  ficam em `images/`, fora do git. Cada capítulo usa duas (ver `temple/Relics.tsx`).
 - **Previews da Pinacoteca:** ver abaixo.
 
 ## Pinacoteca
@@ -147,12 +152,13 @@ Antes de cada commit visual:
 
 ## Fases
 
-1. **Estrutura:** este brief, o modelo de dados dos trabalhos, os capítulos na landing e a
+1. ✓ **Estrutura:** este brief, o modelo de dados dos trabalhos, os capítulos na landing e a
    navegação.
-2. **Sistema de colunas:** pórtico, trilho de capítulos e cabeçalhos de capítulo finais.
-3. **Pinacoteca de verdade:** dados reais, previews e o card definitivo.
-4. **Movimento:** revelações, recortes fixos por capítulo e parallax.
-5. **Templo à noite:** o tema escuro com identidade própria.
+2. ✓ **Sistema de colunas:** pórtico, trilho de capítulos e cabeçalhos de capítulo.
+3. **Pinacoteca de verdade:** dados reais, previews e o card definitivo. *Aguardando os dados.*
+4. ✓ **Movimento:** revelações, relíquias por capítulo e a passagem da Hero. *Parallax por camada
+   ainda não feito.*
+5. ✓ **Templo à noite:** Hero em negativo, tochas, dourado iluminado e a constelação de Lyra.
 6. **Futuro:** um momento em WebGL (o templo em 3D), ousado e isolado num trecho.
 
 ## Referência e atribuição

@@ -32,7 +32,7 @@ function WorkCard({ work: w, index }: { work: Work; index: number }) {
   );
 
   return (
-    <article className="group relative">
+    <article data-reveal="up" className="group relative">
       {w.url && !w.draft ? (
         <a href={w.url} target="_blank" rel="noopener noreferrer" aria-label={`Abrir ${w.name} em nova aba`} className="block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent">
           {frame}
@@ -56,11 +56,11 @@ function WorkCard({ work: w, index }: { work: Work; index: number }) {
 export default function Pinacoteca() {
   const list = sortWorks(works).slice(0, LANDING_LIMIT);
   return (
-    <section id="pinacoteca" className="py-26">
+    <section id="pinacoteca" data-chapter="01" data-title="Pinacoteca" className="py-26">
       <div className="wrap">
         <ChapterHead n="01" title="Pinacoteca" greek="ΠΙΝΑΚΟΘΗΚΗ" />
-        <h2 className="h-display mt-12 text-4xl tracking-[-2px] md:text-5xl">Landing pages em exposição</h2>
-        <p className="copy mt-4 text-muted">
+        <h2 data-reveal="words" className="h-display mt-12 text-4xl tracking-[-2px] md:text-5xl">Landing pages em exposição</h2>
+        <p data-reveal="up" className="copy mt-4 text-muted">
           Sites e landing pages que desenhei e construí.<br />
           Cada peça abre a página publicada.
         </p>
