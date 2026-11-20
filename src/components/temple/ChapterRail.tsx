@@ -7,7 +7,8 @@ import { useChapterScroll } from "./useChapterScroll";
 // Desktop (≥1280px): coluna dórica fixa à esquerda, na mesma posição da coluna do pórtico; as caneluras douram com o scroll
 // e cada capítulo é uma junta entre tambores, clicável. Abaixo disso: linha dourada de progresso sob a navbar.
 // O progresso vai na variável CSS --p, escrita direto no DOM para não renderizar a cada frame.
-export default function ChapterRail() {
+// lineTop: posição da linha de progresso no mobile, logo abaixo da navbar da página (a padrão tem 64px + 1px de borda).
+export default function ChapterRail({ lineTop = "top-[65px]" }: { lineTop?: string }) {
   const root = useRef<HTMLDivElement>(null);
   const { chapters, active, visible } = useChapterScroll((p) => root.current?.style.setProperty("--p", p.toFixed(4)));
 
@@ -30,8 +31,7 @@ export default function ChapterRail() {
         </Column>
       </nav>
 
-      {/* 65px: a navbar tem 64px mais 1px de borda. */}
-      <div aria-hidden className="fixed inset-x-0 top-[65px] z-20 h-0.5 xl:hidden">
+      <div aria-hidden className={`fixed inset-x-0 z-20 h-0.5 xl:hidden ${lineTop}`}>
         <div className="absolute inset-0 origin-left bg-gold" style={{ transform: "scaleX(var(--p, 0))" }} />
         {chapters.map((c) => (
           <span key={c.id} className="absolute -top-0.5 h-1.5 w-px bg-ink/40" style={{ left: `${c.pos * 100}%` }} />

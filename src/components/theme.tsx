@@ -2,9 +2,18 @@
 import { ThemeProvider as Provider, useTheme } from "next-themes";
 import { Monitor, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
+// A /templo (versão cinematográfica, em teste) abre à noite; o resto do site segue o sistema.
+// O padrão só vale enquanto o visitante não escolhe um tema: a escolha fica salva e é respeitada em todas as rotas.
+// A `key` remonta o provider ao entrar ou sair da /templo, para ele reler o padrão certo na navegação pelo cliente.
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  return <Provider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>{children}</Provider>;
+  const templo = usePathname()?.startsWith("/templo") ?? false;
+  return (
+    <Provider key={templo ? "templo" : "site"} attribute="class" defaultTheme={templo ? "dark" : "system"} enableSystem disableTransitionOnChange>
+      {children}
+    </Provider>
+  );
 }
 
 const modes = [["light", Sun, "Tema claro"], ["dark", Moon, "Tema escuro"], ["system", Monitor, "Tema do sistema"]] as const;
