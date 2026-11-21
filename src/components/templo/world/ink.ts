@@ -1,6 +1,6 @@
 // Passe final em tela cheia. Converte a cena renderizada (HDR, linear) em imagem:
-//   - "pura": tone mapping ACES e sRGB, como uma cena 3D comum;
-//   - "gravura": o tom de cada ponto vira hachura de nanquim. Três famílias de linhas engrossam e se cruzam
+//   - "pura" (a escolhida, padrão): tone mapping ACES e sRGB, como uma cena 3D comum;
+//   - "gravura" (de reserva, para um novo teste com ?mundo=gravura): o tom de cada ponto vira hachura de nanquim. Três famílias de linhas engrossam e se cruzam
 //     conforme o tom; superfícies horizontais recebem linhas horizontais e as verticais, linhas inclinadas
 //     (lidas do passe de normais); contornos saem das quinas de profundidade e normal; o céu ganha as linhas
 //     horizontais finas das gravuras antigas.
@@ -24,7 +24,7 @@ export function inkMaterial() {
       uDpr: { value: 1 },
       uNear: { value: 0.5 },
       uFar: { value: 600 },
-      uSplit: { value: 0.5 },
+      uSplit: { value: 0 }, // 0 = tudo puro (padrão); 1 = tudo gravura
       uNight: { value: 1 },
       uExposure: { value: 1 },
       uFade: { value: 0 },

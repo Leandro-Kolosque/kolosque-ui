@@ -51,7 +51,7 @@ function WorkFrame({ work: w, index, total }: { work: Work; index: number; total
 export default function PinacotecaMosaic() {
   const list = sortWorks(works).slice(0, LANDING_LIMIT);
   return (
-    <section id="pinacoteca" data-chapter="01" data-title="Pinacoteca" aria-labelledby="pinacoteca-titulo" className="t-sec">
+    <section id="pinacoteca" data-chapter="01" data-title="Pinacoteca" data-cam="1" aria-labelledby="pinacoteca-titulo" className="t-sec">
       <ChapterHead n="01" title="Pinacoteca" greek="ΠΙΝΑΚΟΘΗΚΗ" />
       <h2 id="pinacoteca-titulo" className="sr-only">Pinacoteca: landing pages em exposição</h2>
       <div className="t-mosaic" data-count={list.length}>

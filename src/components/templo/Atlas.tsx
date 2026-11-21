@@ -9,7 +9,7 @@ import ChapterHead from "@/components/ChapterHead";
 export default function Atlas() {
   const featured = experiments.filter((e) => e.featured);
   return (
-    <section id="biblioteca" data-chapter="02" data-title="Biblioteca" className="t-sec">
+    <section id="biblioteca" data-chapter="02" data-title="Biblioteca" data-cam="2" className="t-sec">
       <ChapterHead n="02" title="Biblioteca" greek="ΒΙΒΛΙΟΘΗΚΗ" />
       <div className="t-split">
         <h2 data-reveal="words" className="t-h2">Experimentos em destaque</h2>

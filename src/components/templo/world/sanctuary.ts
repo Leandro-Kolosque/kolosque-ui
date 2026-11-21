@@ -34,11 +34,13 @@ import * as G from "./geometry";
 export type Sanctuary = {
   scene: Scene;
   setNight(night: boolean): void;
+  // tall: 0 num quadro largo, 1 num quadro alto (celular); a lua se aproxima do centro para não sair da tela
+  setMoonAspect(tall: number): void;
   update(dt: number, t: number, motion: boolean): void;
   dispose(): void;
 };
 
-const LAYER_LIGHT = 1;
+export const LAYER_LIGHT = 1;
 
 // Textura radial desenhada em canvas (brilho do halo, da chama e das brasas).
 function radial(stops: [number, string][], w = 128, h = 128) {
@@ -73,12 +75,13 @@ function flameTexture() {
   return new CanvasTexture(c);
 }
 
-// Braseiros: [x, y do chão, z]. Os quatro primeiros acendem luzes de verdade; os outros só brilham.
-const BRAZIERS: [number, number, number][] = [
-  [-5.7, 0, 1.4], [5.7, 0, 1.4],
-  [-6.6, 6, -12.8], [6.6, 6, -12.8],
-  [-11, 6, -14.6], [11, 6, -14.6],
-  [-8.8, 14, -43.4], [8.8, 14, -43.4],
+// Braseiros: [x, y do chão, z, acende uma luz de verdade?]. Os outros só brilham (luz custa em cada pixel).
+const BRAZIERS: [number, number, number, boolean][] = [
+  [-5.7, 0, 1.4, true], [5.7, 0, 1.4, true],            // pé da escada
+  [-6.6, 6, -12.8, false], [6.6, 6, -12.8, false],      // topo da escada
+  [-11, 6, -14.6, true], [11, 6, -14.6, true],          // entre os Propileus e as alas
+  [-9.6, 14, -45.8, true], [9.6, 14, -45.8, true],      // frente do templo
+  [19.4, 14, -57, true], [19.4, 14, -74, false], [19.4, 14, -91, false], // ao longo da stoa
 ];
 const TRIPOD_H = 1.7;
 
@@ -146,6 +149,8 @@ export function buildSanctuary(): Sanctuary {
     bronze: keep(new MeshStandardMaterial({ color: 0x7a5530, metalness: 0.7, roughness: 0.45 })),
     hills: keep(new MeshStandardMaterial({ color: 0x3a312c, roughness: 1 })),
     door: keep(new MeshBasicMaterial({ color: new Color(2.6, 1.55, 0.6) })),
+    lamp: keep(new MeshBasicMaterial({ color: new Color(1.8, 1.05, 0.42) })),
+    niche: keep(new MeshStandardMaterial({ color: 0x2a221e, roughness: 1 })),
   };
 
   const add = (geo: BufferGeometry, m: MeshStandardMaterial | MeshBasicMaterial, shadow = true) => {
@@ -186,6 +191,61 @@ export function buildSanctuary(): Sanctuary {
     add(G.pediment(19.1, 9.5, ent.top, 1.35).translate(0, 0, front + 0.85), mat.marble);
   }
 
+  // ---------------------------------------------------------------- alas dos Propileus
+  // À esquerda, a Pinacoteca (a ala noroeste, onde ficavam as pinturas): pórtico de três colunas entre antas e,
+  // no fundo, a porta e as janelas acesas da galeria. À direita, uma ala menor, para o portal não ficar torto.
+  const wing = (cx: number, W: number, D: number, xs: number[], lit: boolean) => {
+    const y0 = 6.36, front = -15.4;
+    add(G.crepidoma(W, D, 6, 0.12, 0.25, front + 0.6), mat.marble);
+    const col = G.doricColumn(4, 0.42);
+    keep(col.geometry);
+    add(G.merge(xs.map((x) => col.geometry.clone().translate(cx + x, y0, front))), mat.marble);
+    const back = front - 3.4;
+    add(G.merge([
+      ...[-1, 1].map((s) => G.box(0.7, col.top, 3.4, cx + s * (W / 2 - 0.35), y0 + col.top / 2, front - 1.7)), // antas
+      G.box(W, col.top, D - 3.6, cx, y0 + col.top / 2, back - (D - 3.6) / 2),                                 // sala
+    ]), mat.marble);
+    const ent = G.entablature(W, D, y0 + col.top, xs.map((x) => cx + x), 0.5, 0.5, 0.24);
+    ent.geometry.translate(0, 0, front + 0.5);
+    add(ent.geometry, mat.marble);
+    if (!lit) return;
+    const glow = G.merge([G.box(1.7, 3.1, 0.05, cx, y0 + 1.55, back + 0.05), ...[-1, 1].map((s) => G.box(1.1, 1.5, 0.05, cx + s * 3.2, y0 + 2.2, back + 0.05))]);
+    add(glow, mat.lamp, false).layers.set(LAYER_LIGHT);
+  };
+  wing(-18, 11.6, 9, [-2.6, 0, 2.6], true);
+  wing(16.6, 8.6, 7.5, [-1.5, 1.5], false);
+
+  // ---------------------------------------------------------------- stoa da Biblioteca
+  // Colunata longa no terraço de cima, de frente para o templo, com nichos de rolos na parede do fundo
+  // (alguns com lamparina acesa). Montada com o comprimento em x e a frente em z = 0, depois girada para
+  // ficar ao longo do terraço, com a frente em x = 21,5 olhando para o templo.
+  {
+    const L = 56, D = 7.5, y0 = 14.36;
+    const xs = Array.from({ length: 17 }, (_, i) => -L / 2 + 1.6 + i * 3.3);
+    const col = G.doricColumn(5.6, 0.46);
+    keep(col.geometry);
+    const stone: BufferGeometry[] = [
+      G.box(L + 1.2, 0.18, D + 1.2, 0, 14.09, -D / 2),
+      G.box(L + 0.6, 0.18, D + 0.6, 0, 14.27, -D / 2),
+      ...xs.map((x) => col.geometry.clone().translate(x, y0, -0.7)),
+      G.box(L, col.top, 0.8, 0, y0 + col.top / 2, -D + 0.4),
+      // só a parede do fundo da ponta distante: a ponta perto da câmera fica aberta e mostra a colunata
+      G.box(0.8, col.top, D, -(L / 2 - 0.4), y0 + col.top / 2, -D / 2),
+    ];
+    const ent = G.entablature(L, D, y0 + col.top, xs, 0.55, 0.55, 0.25);
+    stone.push(ent.geometry, G.box(L + 0.8, 0.35, D + 1.2, 0, ent.top + 0.18, -D / 2));
+    const niches: BufferGeometry[] = [], lamps: BufferGeometry[] = [];
+    for (let i = 0; i < xs.length - 1; i++) {
+      const x = (xs[i] + xs[i + 1]) / 2;
+      niches.push(G.box(1.5, 2.3, 0.12, x, y0 + 2.5, -D + 0.85));
+      if (i % 3 === 1) lamps.push(G.box(0.5, 0.36, 0.06, x, y0 + 1.75, -D + 0.93));
+    }
+    const place = (g: BufferGeometry) => g.rotateY(-Math.PI / 2).translate(21.5, 0, -77);
+    add(place(G.merge(stone)), mat.marble);
+    add(place(G.merge(niches)), mat.niche);
+    add(place(G.merge(lamps)), mat.lamp, false).layers.set(LAYER_LIGHT);
+  }
+
   // ---------------------------------------------------------------- o templo (octástilo, períptero)
   {
     const y0 = 15.35, front = -49;
@@ -221,11 +281,14 @@ export function buildSanctuary(): Sanctuary {
 
   // ---------------------------------------------------------------- vegetação e pedras
   const cyp: BufferGeometry[] = [];
+  // [x, y, z, altura]; os de x positivo no terraço de cima ficam atrás da stoa
   const spots: [number, number, number, number][] = [
-    [13, 6, -18, 7], [16.6, 6, -22, 9], [20.5, 6, -27, 8], [24, 6, -20, 6.5],
-    [17.5, 14, -54, 11], [21.5, 14, -63, 12.5], [25.5, 14, -72, 11], [30, 14, -58, 9],
+    [-14, 6, -29, 7], [-18, 6, -31.5, 9], [-22, 6, -30, 8], [-26, 6, -33, 6.5],
+    [14, 6, -29, 7], [18, 6, -31.5, 9], [22, 6, -30, 8], [26, 6, -33, 6.5],
+    [-17.5, 14, -54, 11], [-21.5, 14, -63, 12.5], [-25.5, 14, -72, 11], [-30, 14, -58, 9],
+    [33.5, 14, -60, 12.5], [35, 14, -80, 11.5], [33, 14, -98, 10.5],
   ];
-  for (const [x, y, z, h] of spots) for (const s of [-1, 1]) cyp.push(G.cypress(h, 0.9 + rand() * 0.4, rand).translate(s * x + (rand() - 0.5), y, z + (rand() - 0.5) * 2));
+  for (const [x, y, z, h] of spots) cyp.push(G.cypress(h, 0.9 + rand() * 0.4, rand).translate(x + (rand() - 0.5), y, z + (rand() - 0.5) * 2));
   add(G.merge(cyp), mat.cypress);
 
   const trunks: BufferGeometry[] = [], crowns: BufferGeometry[] = [];
@@ -263,7 +326,7 @@ export function buildSanctuary(): Sanctuary {
   const glowTex = keep(radial([[0, "rgba(255,200,120,.9)"], [0.35, "rgba(255,140,50,.35)"], [1, "rgba(255,120,40,0)"]]));
   const flames: { core: Sprite; glow: Sprite; seed: number; base: Vector3 }[] = [];
   const torches: PointLight[] = [];
-  for (const [i, [x, y, z]] of BRAZIERS.entries()) {
+  for (const [i, [x, y, z, lit]] of BRAZIERS.entries()) {
     tripods.push(tripodGeo.clone().translate(x, y, z));
     const base = new Vector3(x, y + TRIPOD_H + 0.22, z);
     const core = new Sprite(keep(new SpriteMaterial({ map: flameTex, color: new Color(2.6, 1.4, 0.5), blending: AdditiveBlending, depthWrite: false, transparent: true })));
@@ -276,7 +339,7 @@ export function buildSanctuary(): Sanctuary {
     glow.layers.set(LAYER_LIGHT);
     scene.add(core, glow);
     flames.push({ core, glow, seed: i * 1.7, base });
-    if (i < 4) {
+    if (lit) {
       const l = new PointLight(0xffa04a, 0, 16, 2);
       l.position.copy(base).add(new Vector3(0, 0.4, 0.3));
       scene.add(l);
@@ -369,11 +432,11 @@ export function buildSanctuary(): Sanctuary {
   const key = new DirectionalLight();
   key.castShadow = true;
   key.shadow.mapSize.set(2048, 2048);
-  Object.assign(key.shadow.camera, { left: -45, right: 45, top: 55, bottom: -55, near: 1, far: 320 });
+  Object.assign(key.shadow.camera, { left: -62, right: 62, top: 78, bottom: -78, near: 1, far: 420 });
   key.shadow.bias = -0.0004;
   key.shadow.normalBias = 0.03;
   const keyTarget = new Object3D();
-  keyTarget.position.set(0, 6, -30);
+  keyTarget.position.set(0, 10, -45);
   key.target = keyTarget;
   scene.add(key, keyTarget);
   const fill = new DirectionalLight(0xc8c0d8, 0.2);
@@ -403,6 +466,7 @@ export function buildSanctuary(): Sanctuary {
     halo.visible = theme.halo > 0;
     stars.visible = embers.visible = theme.stars;
     mat.door.color.setRGB(2.6, 1.55, 0.6).multiplyScalar(theme === NIGHT ? 1 : 0.35);
+    mat.lamp.color.setRGB(1.8, 1.05, 0.42).multiplyScalar(theme === NIGHT ? 1 : 0.3);
     doorLight.intensity = theme.door;
   }
 
@@ -433,10 +497,17 @@ export function buildSanctuary(): Sanctuary {
     emberGeo.attributes.position.needsUpdate = true;
   }
 
+  function setMoonAspect(tall: number) {
+    const x = MOON.pos.x * (1 - 0.5 * tall);
+    moon.position.x = x;
+    halo.position.x = x;
+  }
+
   setNight(true);
   return {
     scene,
     setNight,
+    setMoonAspect,
     update,
     dispose: () => disposables.forEach((d) => d.dispose()),
   };

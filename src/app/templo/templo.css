@@ -103,7 +103,7 @@ html:not(.dark) .templo {
     display: none
 }
 
-/* Comparador do protótipo (fase 2): sai quando a linguagem do mundo for escolhida. */
+/* Comparador entre a pura (escolhida) e a gravura (de reserva). Só aparece com ?mundo=gravura|comparar|pura na URL. */
 .t-modes {
     position: fixed;
     left: 50%;
@@ -627,6 +627,11 @@ html:not(.dark) .t-word {
     opacity: .82
 }
 
+/* Com o mundo em WebGL pronto, a palavra vive dentro da cena (wordmark.ts); a versão em HTML fica só como reserva. */
+.templo.has-world .t-word {
+    display: none
+}
+
 /* Janela da obra em destaque: o play fica no centro do quadro, não da legenda. */
 .t-peek {
     position: absolute;
@@ -879,12 +884,16 @@ html:not(.dark) .t-word {
     max-width: 640px
 }
 
+/* Os fios da grade são desenhados por cada prancha (sombra de 1px), e não por um fundo atrás da grade:
+   assim, antes das pranchas entrarem, não aparece um bloco chapado no lugar delas. */
 .t-atlas {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 1px;
-    background: var(--line);
-    border: 1px solid var(--line)
+    gap: 1px
+}
+
+.t-atlas > .t-cell {
+    box-shadow: 0 0 0 1px var(--line)
 }
 
 .t-cell {

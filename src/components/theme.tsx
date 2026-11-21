@@ -1,16 +1,39 @@
 "use client";
 import { ThemeProvider as Provider, useTheme } from "next-themes";
 import { Monitor, Moon, Sun } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+
+const STORAGE = "theme";
+
+// Na navegação pelo cliente o provider não remonta (remontar redesenharia o <script> dele, e o React reclama),
+// então o padrão da rota nova é aplicado aqui: só se o visitante nunca escolheu um tema, e sem salvar nada.
+function RouteDefault({ fallback }: { fallback: string }) {
+  const { setTheme } = useTheme();
+  const first = useRef(true);
+  useEffect(() => {
+    if (first.current) {
+      first.current = false; // na primeira carga o script do next-themes já aplicou o padrão certo
+      return;
+    }
+    try {
+      if (localStorage.getItem(STORAGE)) return;
+      setTheme(fallback);
+      localStorage.removeItem(STORAGE); // setTheme salva; o padrão de rota não é uma escolha do visitante
+    } catch {
+      // sem localStorage, fica o tema atual
+    }
+  }, [fallback, setTheme]);
+  return null;
+}
 
 // A /templo (versão cinematográfica, em teste) abre à noite; o resto do site segue o sistema.
 // O padrão só vale enquanto o visitante não escolhe um tema: a escolha fica salva e é respeitada em todas as rotas.
-// A `key` remonta o provider ao entrar ou sair da /templo, para ele reler o padrão certo na navegação pelo cliente.
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const templo = usePathname()?.startsWith("/templo") ?? false;
+  const fallback = usePathname()?.startsWith("/templo") ? "dark" : "system";
   return (
-    <Provider key={templo ? "templo" : "site"} attribute="class" defaultTheme={templo ? "dark" : "system"} enableSystem disableTransitionOnChange>
+    <Provider attribute="class" storageKey={STORAGE} defaultTheme={fallback} enableSystem disableTransitionOnChange>
+      <RouteDefault fallback={fallback} />
       {children}
     </Provider>
   );

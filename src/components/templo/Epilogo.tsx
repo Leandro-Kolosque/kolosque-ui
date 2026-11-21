@@ -6,7 +6,7 @@ import { GITHUB } from "@/data/templo";
 // botões descem pela esquerda. À noite, a constelação de Lyra aparece no céu.
 export default function Epilogo() {
   return (
-    <section id="contato" data-chapter="04" data-title="Epílogo" className="t-sec t-fin">
+    <section id="contato" data-chapter="04" data-title="Epílogo" data-cam="4" className="t-sec t-fin">
       <p data-reveal="fade" className="t-label col-start-1 row-start-1"><b className="font-medium text-accent">04</b> — Epílogo</p>
       <div className="col-start-1 row-start-2">
         <h2 data-reveal="words" className="t-h2 max-w-[12ch] text-[clamp(36px,3.6vw,56px)]">Veja o que já saiu do papel.</h2>

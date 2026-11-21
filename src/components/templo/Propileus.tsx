@@ -18,7 +18,7 @@ function featured() {
 export default function Propileus() {
   const peek = featured();
   return (
-    <section id="top" aria-label="Propileus" data-reveal-now className="t-hero">
+    <section id="top" aria-label="Propileus" data-reveal-now data-cam="0" className="t-hero">
       <div className="t-hero-top">
         <p data-reveal="fade" className="t-label flex items-center gap-3">
           <span aria-hidden className="t-dot" />Nº 00 — Propileus

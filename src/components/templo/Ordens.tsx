@@ -6,7 +6,7 @@ import ChapterHead from "@/components/ChapterHead";
 // a jornada vira uma faixa de quatro colunas e a stack fecha o capítulo.
 export default function Ordens() {
   return (
-    <section id="ordens" data-chapter="03" data-title="Ordens" className="t-sec">
+    <section id="ordens" data-chapter="03" data-title="Ordens" data-cam="3" className="t-sec">
       <ChapterHead n="03" title="Ordens" greek="ΤΑΞΙΣ" />
       <div className="t-spread">
         <h2 data-reveal="words" className="t-h2">A personal archive of digital experiences.</h2>
