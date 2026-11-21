@@ -745,6 +745,15 @@ html:not(.dark) .t-sec:not(.t-fin)::before {
     z-index: 2
 }
 
+/* Faíscas do Epílogo (EpilogoBlaze): na base do capítulo, atrás do texto e na frente do mundo. */
+.t-sec > .t-blaze {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 1;
+    height: 75%;
+    pointer-events: none
+}
+
 /* 01 · Pinacoteca: mosaico. Uma obra grande ao lado de duas empilhadas; da quarta em diante, fileiras de três. */
 .t-mosaic {
     display: grid;
@@ -990,21 +999,55 @@ html:not(.dark) .t-sec:not(.t-fin)::before {
 }
 
 /* 03 · Ordens: o título atravessa duas colunas, o texto fica na terceira e a jornada vira uma faixa com fios. */
+/* Título e texto à esquerda, o capitel em nanquim à direita, ocupando as duas linhas. */
 .t-spread {
     display: grid;
-    grid-template-columns: minmax(120px, .38fr) minmax(0, 1.08fr) minmax(280px, .88fr);
-    gap: clamp(20px, 3vw, 56px);
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr);
+    grid-template-rows: auto 1fr;
+    column-gap: clamp(28px, 5vw, 96px);
+    row-gap: clamp(28px, 4vh, 48px);
     margin-top: clamp(32px, 5vh, 64px)
 }
 
 .t-spread h2 {
-    grid-column: 1 / 3;
+    grid-column: 1;
     max-width: 13ch
 }
 
 .t-spread .t-copy {
-    grid-column: 3;
-    padding-top: 6px
+    grid-column: 1;
+    max-width: 600px
+}
+
+.t-ink {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    align-self: center;
+    width: 100%;
+    max-width: 500px;
+    justify-self: end
+}
+
+.t-ink-box {
+    aspect-ratio: 1;
+    width: 100%
+}
+
+.t-ink-canvas {
+    width: 100%;
+    height: 100%;
+    cursor: grab
+}
+
+.t-ink-canvas:active {
+    cursor: grabbing
+}
+
+/* sem arrastar (toque), o canvas não pode prender o scroll da página */
+@media not ((hover: hover) and (pointer: fine)) {
+    .t-ink-canvas canvas {
+        touch-action: pan-y !important
+    }
 }
 
 .t-band {
@@ -1317,12 +1360,19 @@ html:not(.dark) .t-grain {
     }
 
     .t-spread h2,
-    .t-spread .t-copy {
-        grid-column: auto
+    .t-spread .t-copy,
+    .t-ink {
+        grid-column: auto;
+        grid-row: auto
     }
 
     .t-spread h2 {
         max-width: 16ch
+    }
+
+    .t-ink {
+        justify-self: center;
+        max-width: min(80vw, 380px)
     }
 
     .t-cell:nth-child(n) {

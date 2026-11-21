@@ -1,9 +1,10 @@
 import { stack } from "@/data/stack";
 import { journey } from "@/data/templo";
 import ChapterHead from "@/components/ChapterHead";
+import OrdensInk from "./OrdensInk";
 
-// 03 · Ordens: quem sou e como trabalho. O título atravessa duas colunas, o texto fica na terceira,
-// a jornada vira uma faixa de quatro colunas e a stack fecha o capítulo.
+// 03 · Ordens: quem sou e como trabalho. Título e texto à esquerda; à direita, o capitel jônico em nanquim
+// (Ink Object, do Canvas UI), a peça que dá nome às ordens. A jornada vira uma faixa de quatro colunas e a stack fecha.
 export default function Ordens() {
   return (
     <section id="ordens" data-chapter="03" data-title="Ordens" data-cam="3" className="t-sec">
@@ -23,6 +24,13 @@ export default function Ordens() {
             entendendo cada decisão.
           </p>
         </div>
+        <figure className="t-ink">
+          <OrdensInk />
+          <figcaption className="mt-4 flex items-baseline justify-between gap-4">
+            <span aria-hidden className="t-greek text-lg tracking-[.12em] text-muted">ΚΙΟΚΡΑΝΟΝ</span>
+            <span className="t-label">Capitel jônico<span className="max-[1023px]:hidden"> · arraste para girar</span></span>
+          </figcaption>
+        </figure>
       </div>
 
       <ol id="jornada" className="t-band">

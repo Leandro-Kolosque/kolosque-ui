@@ -1,12 +1,14 @@
 import Link from "next/link";
 import Lyra from "@/components/temple/Lyra";
 import { GITHUB } from "@/data/templo";
+import EpilogoBlaze from "./EpilogoBlaze";
 
 // 04 · Epílogo: o convite final. A palavra pende na vertical à direita (decorativa); a frase, o texto e os
-// botões descem pela esquerda. À noite, a constelação de Lyra aparece no céu.
+// botões descem pela esquerda. À noite, a constelação de Lyra aparece no céu e faíscas sobem da base (Blaze).
 export default function Epilogo() {
   return (
     <section id="contato" data-chapter="04" data-title="Epílogo" data-cam="4" className="t-sec t-fin">
+      <EpilogoBlaze />
       <p data-reveal="fade" className="t-label col-start-1 row-start-1"><b className="font-medium text-accent">04</b> — Epílogo</p>
       <div className="col-start-1 row-start-2">
         <h2 data-reveal="words" className="t-h2 max-w-[12ch] text-[clamp(36px,3.6vw,56px)]">Veja o que já saiu do papel.</h2>
