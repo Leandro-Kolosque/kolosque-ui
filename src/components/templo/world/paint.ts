@@ -6,7 +6,7 @@ import { CanvasTexture, LinearMipmapLinearFilter, NoColorSpace } from "three";
 import { rng } from "./geometry";
 
 export type Kind =
-  | "portal" | "musa" | "folhagem" | "cipreste" | "escadaria" | "coluna" | "arco" | "flores"
+  | "portal" | "muro" | "trepadeira" | "musa" | "folhagem" | "cipreste" | "escadaria" | "coluna" | "arco" | "flores"
   | "sebe" | "armaria" | "abside" | "apolo" | "pedestal" | "nuvem" | "piso";
 
 const INK = "#141010";
@@ -95,49 +95,99 @@ function leaves(x: CanvasRenderingContext2D, r: () => number, dots: [number, num
   }
 }
 
+// Coluna coríntia, de baixo para cima: plinto, base ática (dois toros), fuste canelado com êntase, capitel em
+// sino com duas fileiras de acanto e volutas nos cantos, ábaco de lados côncavos e um bloco de arquitrave.
 function column(w: number, h: number, worn: boolean) {
   const { c, x } = pad(w, h);
-  const m = w * 0.08, cx = w / 2;
-  const base = h * 0.06, capH = h * 0.12, archH = h * 0.06;
-  const r0 = w * 0.3, r1 = w * 0.26, top = archH + capH, bot = h - base;
-  const p = new Path2D();
-  p.rect(m, bot, w - 2 * m, base); // plinto
-  p.rect(m, 2, w - 2 * m, archH); // arquitrave
-  p.moveTo(cx - r1 * 1.55, top);
-  p.lineTo(cx + r1 * 1.55, top);
-  p.lineTo(cx + r1, top + capH * 0.95);
-  p.lineTo(cx - r1, top + capH * 0.95);
-  p.closePath(); // capitel
+  const cx = w / 2;
+  const archH = h * 0.05, abacusH = h * 0.025, bellH = h * 0.1, baseH = h * 0.045, plinthH = h * 0.035;
+  const r1 = w * 0.25, r0 = w * 0.3; // raio do fuste no alto e embaixo
+  const yAbacus = archH, yBell = archH + abacusH, yShaft = yBell + bellH, yBase = h - plinthH - baseH, yPlinth = h - plinthH;
+
+  // fuste
   const fuste = new Path2D();
-  fuste.moveTo(cx - r1, top);
-  fuste.quadraticCurveTo(cx - r0 * 1.04, (top + bot) / 2, cx - r0, bot);
-  fuste.lineTo(cx + r0, bot);
-  fuste.quadraticCurveTo(cx + r0 * 1.04, (top + bot) / 2, cx + r1, top);
+  fuste.moveTo(cx - r1, yShaft);
+  fuste.quadraticCurveTo(cx - r0 * 1.06, (yShaft + yBase) * 0.62, cx - r0, yBase);
+  fuste.lineTo(cx + r0, yBase);
+  fuste.quadraticCurveTo(cx + r0 * 1.06, (yShaft + yBase) * 0.62, cx + r1, yShaft);
   fuste.closePath();
   solid(x, fuste, 3);
-  solid(x, p, 3);
-  // caneluras
   x.strokeStyle = INK;
   x.lineWidth = 1.3;
   for (let i = -3; i <= 3; i++) {
     x.beginPath();
-    x.moveTo(cx + (i / 4) * r1, top + 6);
-    x.lineTo(cx + (i / 4) * r0, bot - 4);
+    x.moveTo(cx + (i / 3.6) * r1, yShaft + 8);
+    x.lineTo(cx + (i / 3.6) * r0, yBase - 8);
     x.stroke();
   }
-  // folhas de acanto no capitel
-  for (let i = 0; i < 5; i++) {
+  hatch(x, fuste, { band: [cx + r0 * 0.35, 0, w, h], gap: 5 });
+
+  // base ática e plinto
+  const base = new Path2D();
+  base.ellipse(cx, yBase + baseH * 0.28, r0 * 1.12, baseH * 0.3, 0, 0, Math.PI * 2);
+  base.ellipse(cx, yBase + baseH * 0.74, r0 * 1.28, baseH * 0.32, 0, 0, Math.PI * 2);
+  solid(x, base, 2.6);
+  const plinth = rect(cx - r0 * 1.36, yPlinth, r0 * 2.72, plinthH - 2);
+  solid(x, plinth, 3);
+  hatch(x, base, { band: [cx + r0 * 0.4, 0, w, h], gap: 4 });
+  hatch(x, plinth, { band: [cx + r0 * 0.4, 0, w, h], gap: 4 });
+
+  // capitel: sino que abre para cima, coberto de acanto
+  const bell = new Path2D();
+  bell.moveTo(cx - r1, yShaft);
+  bell.quadraticCurveTo(cx - r1 * 1.05, yBell + bellH * 0.35, cx - r1 * 1.5, yBell);
+  bell.lineTo(cx + r1 * 1.5, yBell);
+  bell.quadraticCurveTo(cx + r1 * 1.05, yBell + bellH * 0.35, cx + r1, yShaft);
+  bell.closePath();
+  solid(x, bell, 2.6);
+  x.lineWidth = 1.6;
+  for (const [row, n, k] of [[0.92, 5, 1.0], [0.55, 4, 1.25]] as const) {
+    const y0 = yBell + bellH * row, span = r1 * 2 * k;
+    for (let i = 0; i < n; i++) {
+      const lx = cx - span / 2 + (i + 0.5) * (span / n), lw = span / n / 2;
+      x.beginPath();
+      x.moveTo(lx - lw, y0);
+      x.quadraticCurveTo(lx - lw * 0.8, y0 - bellH * 0.4, lx, y0 - bellH * 0.45);
+      x.quadraticCurveTo(lx + lw * 0.8, y0 - bellH * 0.4, lx + lw, y0);
+      x.fillStyle = "#fff";
+      x.fill();
+      x.stroke();
+      x.beginPath();
+      x.moveTo(lx, y0);
+      x.lineTo(lx, y0 - bellH * 0.4);
+      x.stroke();
+    }
+  }
+  // volutas nos cantos, sob o ábaco
+  x.lineWidth = 2;
+  for (const s of [-1, 1]) {
     x.beginPath();
-    x.arc(cx - r1 * 1.2 + i * r1 * 0.6, top + capH * 0.7, r1 * 0.3, Math.PI, 0);
+    x.arc(cx + s * r1 * 1.38, yBell + bellH * 0.16, bellH * 0.13, 0, Math.PI * 2);
+    x.stroke();
+    x.beginPath();
+    x.arc(cx + s * r1 * 1.38, yBell + bellH * 0.16, bellH * 0.06, 0, Math.PI * 2);
     x.stroke();
   }
-  hatch(x, fuste, { band: [cx + r0 * 0.3, 0, w, h], gap: 5 });
-  hatch(x, p, { band: [cx + r1 * 0.4, 0, w, h], gap: 5 });
+  hatch(x, bell, { band: [cx + r1 * 0.5, 0, w, h], gap: 4, a: 0.6 });
+
+  // ábaco de lados côncavos e arquitrave
+  const abacus = new Path2D();
+  abacus.moveTo(cx - r1 * 1.7, yAbacus);
+  abacus.lineTo(cx + r1 * 1.7, yAbacus);
+  abacus.quadraticCurveTo(cx + r1 * 1.45, yAbacus + abacusH / 2, cx + r1 * 1.7, yBell);
+  abacus.lineTo(cx - r1 * 1.7, yBell);
+  abacus.quadraticCurveTo(cx - r1 * 1.45, yAbacus + abacusH / 2, cx - r1 * 1.7, yAbacus);
+  solid(x, abacus, 2.6);
+  const arch = rect(cx - r1 * 1.85, 2, r1 * 3.7, archH - 2);
+  solid(x, arch, 3);
+  hatch(x, arch, { band: [0, archH * 0.55, w, archH], ang: 0, gap: 4, a: 0.6 });
+  hatch(x, abacus, { band: [cx + r1, 0, w, h], gap: 4 });
+
   if (worn) {
     const r = rng(9);
     x.lineWidth = 2;
     x.beginPath();
-    let yy = top + (bot - top) * 0.45, xx = cx - r0;
+    let yy = yShaft + (yBase - yShaft) * 0.45, xx = cx - r0;
     x.moveTo(xx, yy);
     for (let i = 0; i < 6; i++) x.lineTo((xx += (r0 * 2) / 6), (yy += (r() - 0.4) * 18));
     x.stroke();
@@ -193,6 +243,27 @@ function arch(w: number, h: number, kind: "portal" | "arco") {
   // sombra na metade direita e no entablamento
   hatch(x, outer, { band: [cx + ow * 0.5, top, w, h], gap: 6, a: 0.7 });
   hatch(x, outer, { band: [0, top, w, h * 0.09 + top], gap: 4, ang: 0, a: 0.5 });
+  if (kind === "portal") {
+    // guirlanda de louro na arquivolta e dois querubins (só a silhueta) sobre o ático
+    x.lineWidth = 1.8;
+    for (let i = 0; i <= 18; i++) {
+      const a = Math.PI + (i / 18) * Math.PI;
+      const gx = cx + Math.cos(a) * ow * 0.69, gy = springY + Math.sin(a) * ow * 0.69;
+      x.beginPath();
+      x.ellipse(gx, gy, 9, 5, a + Math.PI / 2, 0, Math.PI * 2);
+      x.fillStyle = "#fff";
+      x.fill();
+      x.stroke();
+    }
+    for (const sd of [-1, 1]) {
+      const p = new Path2D();
+      const qx = cx + sd * w * 0.2;
+      p.arc(qx, top - h * 0.055, h * 0.02, 0, Math.PI * 2);
+      p.ellipse(qx, top - h * 0.018, h * 0.03, h * 0.022, 0, 0, Math.PI * 2);
+      solid(x, p, 2.2);
+      hatch(x, p, { band: [qx, 0, w, h], gap: 4 });
+    }
+  }
   if (kind === "arco") {
     // trepadeiras no alto do muro
     const r = rng(21);
@@ -204,9 +275,94 @@ function arch(w: number, h: number, kind: "portal" | "arco") {
   return c;
 }
 
+// Trecho de muro que se repete lado a lado: balaustrada, cornija, silhares com um painel rebaixado,
+// meia pilastra em cada borda (as bordas emendam) e plinto.
+function wall(w: number, h: number) {
+  const { c, x } = pad(w, h);
+  const balB = h * 0.16, corB = h * 0.25, plT = h * 0.91, pil = w * 0.07;
+  solid(x, rect(0, balB, w, h - balB - 1), 3);
+  // fiadas de silhares
+  x.strokeStyle = INK;
+  x.lineWidth = 1.4;
+  const rows = 7, rh = (plT - corB) / rows;
+  for (let i = 1; i < rows; i++) {
+    const y = corB + i * rh;
+    x.beginPath();
+    x.moveTo(pil, y);
+    x.lineTo(w - pil, y);
+    x.stroke();
+    for (let k = 0; k < 6; k++) {
+      const vx = pil + ((k + (i % 2) * 0.5) / 6) * (w - 2 * pil);
+      x.beginPath();
+      x.moveTo(vx, y - rh);
+      x.lineTo(vx, y);
+      x.stroke();
+    }
+  }
+  // painel rebaixado
+  const panel = rect(w * 0.24, corB + rh * 1.2, w * 0.52, rh * 4.4);
+  x.fillStyle = "#fff";
+  x.fill(panel);
+  x.lineWidth = 2.4;
+  x.stroke(panel);
+  hatch(x, panel, { band: [w * 0.24, corB + rh * 1.2, w * 0.52, rh * 0.5], ang: 0, gap: 4, a: 0.7 });
+  hatch(x, panel, { band: [w * 0.24, 0, w * 0.04, h], ang: -1.57, gap: 4, a: 0.6 });
+  // meias pilastras nas bordas
+  for (const px of [0, w - pil]) {
+    const p = rect(px, corB, pil, plT - corB);
+    solid(x, p, 2.4);
+    hatch(x, p, { band: [px + (px ? 0 : pil * 0.5), 0, pil * 0.5, h], gap: 4 });
+  }
+  // cornija
+  const cor = new Path2D();
+  cor.rect(0, balB, w, (corB - balB) * 0.45);
+  cor.rect(0, balB + (corB - balB) * 0.45, w, (corB - balB) * 0.55);
+  solid(x, cor, 2.6);
+  hatch(x, rect(0, balB + (corB - balB) * 0.45, w, (corB - balB) * 0.55), { ang: 0, gap: 4, a: 0.7 });
+  // balaustrada
+  const rail = new Path2D();
+  rail.rect(0, 2, w, h * 0.03);
+  const n = 14;
+  for (let i = 0; i < n; i++) {
+    const bx = ((i + 0.5) / n) * w, bw = (w / n) * 0.42;
+    rail.moveTo(bx - bw * 0.5, balB);
+    rail.quadraticCurveTo(bx - bw, balB - h * 0.05, bx - bw * 0.35, balB - h * 0.09);
+    rail.lineTo(bx - bw * 0.3, h * 0.03 + 2);
+    rail.lineTo(bx + bw * 0.3, h * 0.03 + 2);
+    rail.lineTo(bx + bw * 0.35, balB - h * 0.09);
+    rail.quadraticCurveTo(bx + bw, balB - h * 0.05, bx + bw * 0.5, balB);
+    rail.closePath();
+  }
+  solid(x, rail, 2);
+  hatch(x, rail, { band: [0, 0, w, balB], gap: 5, a: 0.4 });
+  // plinto
+  const pl = rect(0, plT, w, h - plT - 1);
+  solid(x, pl, 3);
+  hatch(x, pl, { ang: 0, gap: 4, a: 0.5 });
+  return c;
+}
+
+// Trepadeira caindo do alto do muro: faixa de folhas e rosas com o topo reto e ramos pendendo.
+function creeper(w: number, h: number, seed: number) {
+  const { c, x } = pad(w, h);
+  const r = rng(seed);
+  const strands: [number, number][] = [];
+  for (let i = 0; i < 26; i++) strands.push([r() * w, h * (0.25 + r() * 0.7)]);
+  const { p, dots } = blob(r, 150, () => {
+    if (r() < 0.45) return [r() * w, 10 + r() * h * 0.16, 14 + r() * 22];
+    const [sx, len] = strands[Math.floor(r() * strands.length)];
+    const t = r();
+    return [sx + Math.sin(t * 6) * 10, h * 0.1 + t * (len - h * 0.1), 8 + (1 - t) * 14];
+  });
+  solid(x, p, 2.2);
+  leaves(x, r, dots, 1.2);
+  hatch(x, p, { band: [0, 0, w, h * 0.2], ang: 0, gap: 4, a: 0.5 });
+  return c;
+}
+
 function figure(w: number, h: number, kind: "musa" | "apolo", face: 1 | -1) {
   const { c, x } = pad(w, h);
-  const cx = w / 2, plinth = h * (kind === "musa" ? 0.08 : 0.025);
+  const cx = w / 2, plinth = h * (kind === "musa" ? 0.2 : 0.025);
   const headR = w * 0.11, headY = h * 0.09;
   const p = new Path2D();
   p.arc(cx + face * w * 0.03, headY, headR, 0, Math.PI * 2);
@@ -220,8 +376,12 @@ function figure(w: number, h: number, kind: "musa" | "apolo", face: 1 | -1) {
   body.closePath();
   solid(x, body, 3);
   solid(x, p, 3);
-  const base = rect(w * 0.08, h - plinth, w * 0.84, plinth - 2);
+  const base = new Path2D();
+  base.rect(w * 0.06, h - plinth, w * 0.88, plinth * 0.12);
+  base.rect(w * 0.12, h - plinth * 0.88, w * 0.76, plinth * 0.76);
+  base.rect(w * 0.06, h - plinth * 0.12, w * 0.88, plinth * 0.12 - 2);
   solid(x, base, 3);
+  hatch(x, base, { band: [w * 0.62, 0, w, h], gap: 5 });
   // dobras do manto
   x.strokeStyle = INK;
   x.lineWidth = 1.6;
@@ -504,7 +664,9 @@ export function paint(kind: Kind, seed = 1): HTMLCanvasElement {
   switch (kind) {
     case "portal": return arch(1000, 1180, "portal");
     case "arco": return arch(1500, 1220, "arco");
-    case "musa": return figure(420, 1000, "musa", seed % 2 ? 1 : -1);
+    case "muro": return wall(1600, 800);
+    case "trepadeira": return creeper(1600, 400, seed);
+    case "musa": return figure(460, 1010, "musa", seed % 2 ? 1 : -1);
     case "apolo": return figure(520, 1240, "apolo", 1);
     case "folhagem": return foliage(560, 1300, seed, false);
     case "sebe": return foliage(2000, 640, seed, true);

@@ -1,5 +1,5 @@
 // O diorama: um eixo só, do portal ao Apolo, com as camadas de gravura de pé ao longo de -z.
-//   Propileus  (z  +8 a -12)  acantos e ruínas na frente, braseiros, a escadaria, o portal entre duas musas e a folhagem
+//   Propileus  (z  +8 a -12)  acantos e ruínas na frente, braseiros, a escadaria, o portal com o muro dos dois lados e as musas
 //   Pinacoteca (z -14 a -96)  o corredor: pares de colunas a cada 8 m, sebes floridas dos lados, tochas e pétalas
 //   Biblioteca (z -100 a -142) paredes de nichos com rolos de papiro dos dois lados
 //   Ordens     (z -146 a -180) a abside com o Apolo no pedestal, nuvens aos pés e o facho de luz
@@ -51,18 +51,26 @@ function layout() {
   P.push({ name: "folhagem-baixa", cut: "acantos", x: 6.6, y: -0.3, z: 8.2, h: 2.2, flip: true, sway: 0.05 });
   P.push({ cut: "blocos", x: -10.5, y: 0, z: 2.5, h: 1.5 });
   P.push({ cut: "fragmentos", x: 9.8, y: 0, z: 3.5, h: 0.8 });
-  P.push({ cut: "oliveira-arvore", x: -19, y: 0, z: -2, h: 5, sway: 0.12 });
-  P.push({ cut: "oliveira-arvore", x: 20, y: 0, z: -4, h: 5.5, flip: true, sway: 0.12 });
   torch(-6.2, 0, -1.5, 2.6);
   torch(6.2, 0, -1.5, 2.6);
   for (const x of [-16, 0, 16]) P.push({ name: "escadaria", paint: "escadaria", x, y: 0, z: -6, h: UP });
   torch(-3.6, UP, -7.6, 2.2);
   torch(3.6, UP, -7.6, 2.2);
   P.push({ name: "portal", paint: "portal", x: 0, y: UP, z: -9, h: 13.5, pass: true });
-  P.push({ name: "musa-esquerda", paint: "musa", seed: 1, x: -8.6, y: UP, z: -8.4, h: 6.4 });
-  P.push({ name: "musa-direita", paint: "musa", seed: 2, x: 8.6, y: UP, z: -8.4, h: 6.4 });
-  both({ name: "folhagem-alta-1", paint: "folhagem", seed: 1, x: -12.6, y: 0.6, z: -7.6, h: 10.5, sway: 0.25 });
-  both({ name: "folhagem-alta-2", paint: "folhagem", seed: 2, x: -16.8, y: 0.6, z: -10.5, h: 13, sway: 0.3, flip: true });
+  // o muro continua o portal dos dois lados até sair da tela; as trepadeiras caem do alto dele
+  const WALL = 7.5;
+  for (const x of [13.2, 28.2, 43.2]) {
+    P.push({ name: "muro", paint: "muro", x: -x, y: UP, z: -9.15, h: WALL });
+    P.push({ name: "muro", paint: "muro", x, y: UP, z: -9.15, h: WALL, flip: true });
+  }
+  for (let i = 0; i < 6; i++) {
+    const x = 9.6 + i * 7.4;
+    P.push({ name: "trepadeira", paint: "trepadeira", seed: i, x: -x, y: UP + WALL - 1.6, z: -9.0, h: 2.1, tint: 0.45 });
+    P.push({ name: "trepadeira", paint: "trepadeira", seed: i + 9, x: x + 1.8, y: UP + WALL - 1.8, z: -9.0, h: 2.3, tint: 0.45, flip: true });
+  }
+  // as musas de pé na frente do muro, sobre plintos altos
+  P.push({ name: "musa-esquerda", paint: "musa", seed: 1, x: -9.4, y: UP, z: -7.4, h: 7.4 });
+  P.push({ name: "musa-direita", paint: "musa", seed: 2, x: 9.4, y: UP, z: -7.4, h: 7.4 });
   both({ name: "ciprestes", paint: "cipreste", x: -14, y: UP, z: -30, h: 14, sway: 0.08 });
   both({ name: "ciprestes", paint: "cipreste", x: -22, y: 0, z: -24, h: 15, sway: 0.08 });
   both({ name: "ciprestes", paint: "cipreste", x: -31, y: 0, z: -40, h: 19, sway: 0.08 });
