@@ -49,7 +49,8 @@ const PATH: { shot?: number; p: Vector3; t: Vector3; fov: number }[] = [
   { shot: 1, p: v(-3.5, 7.2, -1.5), t: v(-19, 10, -19), fov: 46 },
   { p: v(6, 21, -20), t: v(16, 16, -60), fov: 42 },
   { shot: 2, p: v(18.4, 16.8, -40), t: v(26.5, 15.6, -100), fov: 42 },
-  { shot: 3, p: v(15.6, 15.8, -42.6), t: v(12.4, 26.5, -54), fov: 50 },
+  // olha para o alto à frente: as colunas do canto sobem pela esquerda e a lua fica no alto à direita, longe do texto
+  { shot: 3, p: v(15.6, 15.8, -42.6), t: v(16.4, 20.4, -56.8), fov: 50 },
   { shot: 4, p: v(0, 22.5, -11), t: v(0, 25.5, -60), fov: 42 },
   { shot: 5, p: v(0, 52, -18), t: v(0, 8, -64), fov: 46 },
 ];

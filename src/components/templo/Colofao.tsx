@@ -12,7 +12,7 @@ const columns = [
 // Colofão: o manifesto abre, a navegação vira um índice com fios e a base leva o lema em grego.
 export default function Colofao() {
   return (
-    <footer data-cam="5" className="t-foot">
+    <footer id="colofao" data-cam="5" className="t-foot">
       <div className="t-foot-grid">
         <div className="t-foot-brand">
           <Mark size={52} />

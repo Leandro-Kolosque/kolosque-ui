@@ -10,6 +10,7 @@ import Ordens from "@/components/templo/Ordens";
 import Epilogo from "@/components/templo/Epilogo";
 import Colofao from "@/components/templo/Colofao";
 import Cursor from "@/components/templo/Cursor";
+import NearPlane from "@/components/templo/NearPlane";
 import ChapterRail from "@/components/temple/ChapterRail";
 
 // Versão cinematográfica da landing, em teste até ser aprovada e substituir a /. Fora dos buscadores até lá.
@@ -37,6 +38,7 @@ export default function Templo() {
         </main>
         <Colofao />
       </div>
+      <NearPlane />
       <div aria-hidden className="t-vignette" />
       <div aria-hidden className="t-grain" />
       <Cursor />

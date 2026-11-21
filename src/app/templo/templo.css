@@ -733,6 +733,12 @@ html:not(.dark) .t-word {
     background: radial-gradient(108% 64% at 50% 50%, rgb(var(--scrim) / .7), rgb(var(--scrim) / .44) 50%, rgb(var(--scrim) / 0))
 }
 
+/* De dia a gravura tem o mesmo tom do texto (tinta sobre marfim): o véu segura mais e ocupa a largura toda,
+   e o templo fica como textura atrás da leitura. (O Epílogo mantém o véu dele, com o centro aberto.) */
+html:not(.dark) .t-sec:not(.t-fin)::before {
+    background: radial-gradient(140% 78% at 45% 50%, rgb(var(--scrim) / .93), rgb(var(--scrim) / .8) 50%, rgb(var(--scrim) / .4) 80%, rgb(var(--scrim) / 0))
+}
+
 .t-sec > *,
 .t-foot > * {
     position: relative;
@@ -1057,18 +1063,21 @@ html:not(.dark) .t-word {
     text-shadow: 0 2px 34px rgb(var(--scrim) / .72)
 }
 
+/* Lyra no céu à esquerda do frontão: o lado direito do alto é da lua, na tomada do Epílogo. */
 .t-lyra {
     grid-column: 2;
     grid-row: 1 / 3;
     align-self: start;
-    justify-self: center;
-    width: clamp(96px, 9vw, 144px)
+    justify-self: start;
+    width: clamp(96px, 9vw, 144px);
+    margin-top: -12vh
 }
 
 /* ---------------------------------------------------------------- colofão */
 .t-foot {
     position: relative;
-    padding: clamp(48px, 8vh, 96px) var(--pad) clamp(24px, 4vh, 40px) var(--pad-l);
+    /* folga embaixo para a base (© e lema) ficar acima das plantas do primeiro plano */
+    padding: clamp(48px, 8vh, 96px) var(--pad) clamp(96px, 15vh, 144px) var(--pad-l);
     border-top: 1px solid var(--line);
     overflow-x: clip
 }
@@ -1129,6 +1138,118 @@ html:not(.dark) .t-word {
 
 .t-foot-base > :last-child {
     text-align: right
+}
+
+/* ---------------------------------------------------------------- primeiro plano (NearPlane.tsx)
+   Fica na frente do texto e da navbar (z 52) e atrás da vinheta e do grão, que tratam o quadro como uma imagem.
+   Cada palco ocupa a faixa de baixo da tela; as peças são posicionadas a partir da base dele. */
+.t-near {
+    position: fixed;
+    inset: 0;
+    z-index: 52;
+    pointer-events: none;
+    overflow: hidden
+}
+
+/* com o menu do celular aberto, o primeiro plano sai da frente */
+.templo:has(.t-sheet.is-open) .t-near {
+    opacity: 0
+}
+
+.t-stage {
+    position: absolute;
+    inset: auto 0 0;
+    height: min(56svh, 680px);
+    visibility: hidden
+}
+
+.t-stage.is-active,
+.t-stage.is-retiring {
+    visibility: visible
+}
+
+.t-piece {
+    position: absolute;
+    display: block;
+    opacity: 0
+}
+
+/* cada peça espera fora da borda em que está ancorada */
+.t-piece[data-from="up"] { transform: translate3d(0, 13%, 0) }
+.t-piece[data-from="left"] { transform: translate3d(-11%, 6%, 0) }
+.t-piece[data-from="right"] { transform: translate3d(11%, 6%, 0) }
+
+.t-stage.is-active .t-piece {
+    opacity: 1;
+    transform: none;
+    transition: opacity 1.2s var(--ease-out), transform 1.5s var(--ease-out);
+    transition-delay: var(--d, 0ms)
+}
+
+.t-stage.is-retiring .t-piece {
+    opacity: 0;
+    transform: translate3d(0, 8vh, 0) scale(.98);
+    filter: blur(18px);
+    transition: opacity .68s var(--ease-out), transform .78s var(--ease-out), filter .78s var(--ease-out)
+}
+
+.t-piece img {
+    display: block;
+    width: 100%;
+    height: auto;
+    user-select: none;
+    filter: saturate(.92) brightness(.96)
+}
+
+/* À noite, a gravura vira negativo (traço claro sobre o escuro), o mesmo tratamento da Hero noturna:
+   escurecida, ela sumia contra o fundo da cena. */
+html.dark .t-piece img {
+    filter: invert(1) hue-rotate(180deg) brightness(.82) saturate(.7) sepia(.15)
+}
+
+/* um respiro lento nas peças leves (folhagem) */
+@keyframes t-sway {
+    from { transform: rotate(-.45deg) translate3d(0, 2px, 0) }
+    to { transform: rotate(.45deg) translate3d(0, -6px, 0) }
+}
+
+.t-sway {
+    transform-origin: 50% 100%;
+    animation: t-sway 21s var(--ease-io) infinite alternate
+}
+
+/* Posições (desktop). O fundo das imagens é cortado rente à arte, então um bottom negativo enterra parte
+   da peça abaixo da tela, para ela parecer apoiada no chão fora do quadro. */
+.t-p-estilobato { left: -2%; bottom: -46px; width: clamp(240px, 23vw, 420px) }
+.t-p-oliveira   { right: -10%; bottom: -76px; width: clamp(260px, 25vw, 460px) }
+.t-p-acantos-a  { left: 26%; bottom: -96px; width: clamp(400px, 42vw, 760px) }
+
+.t-p-blocos     { left: -4%; bottom: -56px; width: clamp(260px, 25vw, 460px) }
+.t-p-pergaminho { right: -4%; bottom: -44px; width: clamp(200px, 18vw, 340px) }
+.t-p-acantos-b  { left: 34%; bottom: -100px; width: clamp(400px, 40vw, 740px) }
+
+.t-p-capitel    { left: -3%; bottom: -44px; width: clamp(220px, 21vw, 390px) }
+.t-p-tambor     { right: 4%; bottom: -64px; width: clamp(120px, 10vw, 190px) }
+.t-p-acantos-c  { left: 26%; bottom: -104px; width: clamp(400px, 42vw, 760px) }
+
+.t-p-tripode    { left: 4%; bottom: -40px; width: clamp(90px, 7.5vw, 140px) }
+.t-p-lira       { right: 8%; bottom: -54px; width: clamp(110px, 8.5vw, 160px) }
+.t-p-acantos-d  { right: -8%; bottom: -96px; width: clamp(420px, 46vw, 840px) }
+
+.t-p-acantos-e  { left: -6%; bottom: -92px; width: clamp(320px, 30vw, 560px) }
+.t-p-fragmentos { right: -3%; bottom: -36px; width: clamp(200px, 18vw, 330px) }
+
+@media (max-width: 820px) {
+    /* no celular, uma ou duas peças por capítulo, menores, para não cobrir a leitura */
+    .t-stage { height: 30svh }
+    .t-p-estilobato { left: -14%; bottom: -18px; width: min(62vw, 300px) }
+    .t-p-acantos-a  { left: auto; right: -20%; bottom: -40px; width: min(96vw, 460px) }
+    .t-p-blocos     { left: -12%; bottom: -20px; width: min(64vw, 320px) }
+    .t-p-capitel    { left: -10%; bottom: -16px; width: min(58vw, 280px) }
+    .t-p-acantos-c  { left: auto; right: -22%; bottom: -44px; width: min(92vw, 440px) }
+    .t-p-tripode    { left: 3%; bottom: -16px; width: min(20vw, 84px) }
+    .t-p-acantos-d  { right: -26%; bottom: -40px; width: min(96vw, 460px) }
+    .t-p-acantos-e  { left: -16%; bottom: -40px; width: min(96vw, 460px) }
 }
 
 /* ---------------------------------------------------------------- quadro único: vinheta, grão e cursor */
