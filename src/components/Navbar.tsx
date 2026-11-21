@@ -8,6 +8,7 @@ import { matchesQuery } from "@/lib/search";
 import { nav } from "@/data/hero";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import Action from "@/components/Action";
 
 
 export default function Navbar() {
@@ -93,7 +94,7 @@ export default function Navbar() {
             </div>
             {nav.links.map(([label, href]) => <a key={href} href={h(href)} className="link-u">{label}</a>)}
             <ThemeToggle />
-            <a href={nav.cta[1]} className="btn btn-primary btn-sm">{nav.cta[0]}</a>
+            <Action href={nav.cta[1]} variant="primary" size="sm" external>{nav.cta[0]}</Action>
           </nav>
 
           <button className="-mr-3 grid size-12 place-items-center lg:hidden" onClick={() => setMenu(!menu)} aria-label={menu ? "Fechar menu" : "Abrir menu"} aria-expanded={menu}>
@@ -113,7 +114,7 @@ export default function Navbar() {
             <span className="text-muted">Tema</span>
             <ThemeToggle />
           </div>
-          <a href={nav.cta[1]} className="btn btn-primary mt-8">{nav.cta[0]}</a>
+          <Action href={nav.cta[1]} variant="primary" external className="mt-8 self-start">{nav.cta[0]}</Action>
         </div>
       )}
     </>

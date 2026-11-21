@@ -1,7 +1,7 @@
-import { ArrowRight } from "lucide-react";
 import HeroBackground from "./HeroBackground";
 import StackStrip from "./StackStrip";
 import Portico from "./temple/Portico";
+import Action from "@/components/Action";
 
 // A Hero segue o tema: papel marfim de dia; à noite, as gravuras invertidas viram traço claro sobre o escuro (ver HeroBackground).
 export default function Hero() {
@@ -19,9 +19,7 @@ export default function Hero() {
             A playground{" "}<br />for interfaces.
           </h1>
           <div data-reveal="up" className="mt-8 md:mt-10">
-            <a href="#biblioteca" className="btn btn-primary">
-              Explorar biblioteca <ArrowRight size={16} />
-            </a>
+            <Action href="#biblioteca" variant="primary">Explorar biblioteca</Action>
           </div>
         </div>
         <StackStrip />

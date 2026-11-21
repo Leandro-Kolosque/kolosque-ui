@@ -1,6 +1,6 @@
-import Link from "next/link";
 import ChapterHead from "./ChapterHead";
 import Lyra from "./temple/Lyra";
+import Action from "@/components/Action";
 
 export default function Cta() {
   return (
@@ -18,8 +18,8 @@ export default function Cta() {
               Cada experimento mostra em que ponto do aprendizado está.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
-              <Link href="/library" className="btn btn-primary">Abrir a biblioteca</Link>
-              <a href="https://github.com/Leandro-Kolosque" className="btn btn-ghost">Ver no GitHub</a>
+              <Action href="/library" variant="primary">Abrir a biblioteca</Action>
+              <Action href="https://github.com/Leandro-Kolosque" external>Ver no GitHub</Action>
             </div>
           </div>
         </div>

@@ -1,8 +1,7 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { experiments } from "@/data/components";
 import ExperimentCard from "./ExperimentCard";
 import ChapterHead from "./ChapterHead";
+import Action from "@/components/Action";
 
 export default function Featured() {
   const featured = experiments.filter((e) => e.featured);
@@ -24,9 +23,7 @@ export default function Featured() {
           ))}
         </div>
         <div data-reveal="up" className="mt-12">
-          <Link href="/library" className="btn btn-ghost gap-2">
-            Ver todos os experimentos <ArrowRight size={18} />
-          </Link>
+          <Action href="/library">Ver todos os experimentos</Action>
         </div>
       </div>
     </section>

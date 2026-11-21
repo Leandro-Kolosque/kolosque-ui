@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { experiments, statusLabel } from "@/data/components";
 import { categories } from "@/data/categories";
 import ChapterHead from "@/components/ChapterHead";
+import Action from "@/components/Action";
 
 // 02 · Biblioteca: os experimentos em destaque numa grade de pranchas (duas em cima, três embaixo),
 // depois o índice das categorias, cada uma abrindo a /library já filtrada.
@@ -41,7 +42,7 @@ export default function Atlas() {
       <div className="mt-[clamp(48px,8vh,96px)]">
         <div data-reveal="up" className="mb-6 flex flex-wrap items-end justify-between gap-6">
           <p className="t-label">Categorias · {String(categories.length).padStart(2, "0")}</p>
-          <Link href="/library" className="btn btn-ghost btn-sm">Abrir a biblioteca <ArrowRight size={16} /></Link>
+          <Action href="/library" size="sm">Abrir a biblioteca</Action>
         </div>
         <ul data-reveal="up" className="t-index">
           {categories.map((c) => (

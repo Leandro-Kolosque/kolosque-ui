@@ -1,5 +1,6 @@
 import AboutStage from "./AboutStage";
 import ChapterHead from "./ChapterHead";
+import Action from "@/components/Action";
 
 export default function About() {
   return (
@@ -15,8 +16,8 @@ export default function About() {
             Cada um traz uma demo, o código e o que aprendi no caminho.
           </p>
           <div data-reveal="up" className="mt-8 flex flex-wrap gap-4">
-            <a href="#biblioteca" className="btn btn-primary">Explorar biblioteca</a>
-            <a href="#jornada" className="btn btn-ghost">Ver a jornada</a>
+            <Action href="#biblioteca" variant="primary">Explorar biblioteca</Action>
+            <Action href="#jornada">Ver a jornada</Action>
           </div>
         </div>
         <div data-reveal="fade"><AboutStage /></div>

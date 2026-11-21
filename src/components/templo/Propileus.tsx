@@ -2,6 +2,7 @@ import { sortWorks, works } from "@/data/works";
 import { experiments } from "@/data/components";
 import { chapterIndex } from "@/data/templo";
 import { ExperimentPreview } from "@/components/ExperimentCard";
+import Action from "@/components/Action";
 
 // A janela da Hero mostra a obra em destaque: a primeira obra publicada da Pinacoteca ou,
 // enquanto não houver nenhuma, o primeiro experimento em destaque que tem demo. Um clique até a obra.
@@ -28,7 +29,7 @@ export default function Propileus() {
           Portfólio de design e front-end de Leandro Kolosque. As landing pages ficam na Pinacoteca; os experimentos, na Biblioteca.
         </p>
         <div data-reveal="up" className="mt-8">
-          <a href="#pinacoteca" className="btn btn-primary">Ver a Pinacoteca</a>
+          <Action href="#pinacoteca" variant="primary">Ver a Pinacoteca</Action>
         </div>
       </div>
 

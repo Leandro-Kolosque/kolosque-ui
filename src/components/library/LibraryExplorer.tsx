@@ -5,6 +5,8 @@ import { experiments } from "@/data/components";
 import { applyFilters, defaultFilters, hasActiveFilters, parseFilters, toQueryString, type Filters } from "@/lib/filters";
 import ExperimentCard from "@/components/ExperimentCard";
 import FilterBar from "./FilterBar";
+import Action from "@/components/Action";
+import { RotateCcw } from "lucide-react";
 
 export default function LibraryExplorer() {
   const sp = useSearchParams();
@@ -74,7 +76,7 @@ export default function LibraryExplorer() {
             Nada combina com esses filtros.<br />
             Remova alguns para ver mais resultados.
           </p>
-          <button type="button" onClick={onClear} className="btn btn-ghost mt-8">Limpar filtros</button>
+          <Action onClick={onClear} icon={RotateCcw} className="mt-8">Limpar filtros</Action>
         </div>
       )}
     </div>

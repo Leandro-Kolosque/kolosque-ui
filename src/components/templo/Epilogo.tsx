@@ -1,7 +1,7 @@
-import Link from "next/link";
 import Lyra from "@/components/temple/Lyra";
 import { GITHUB } from "@/data/templo";
 import EpilogoBlaze from "./EpilogoBlaze";
+import Action from "@/components/Action";
 
 // 04 · Epílogo: o convite final. A palavra pende na vertical à direita (decorativa); a frase, o texto e os
 // botões descem pela esquerda. À noite, a constelação de Lyra aparece no céu e faíscas sobem da base (Blaze).
@@ -17,8 +17,8 @@ export default function Epilogo() {
         </p>
       </div>
       <div data-reveal="up" className="col-start-1 row-start-3 flex flex-wrap gap-4">
-        <Link href="/library" className="btn btn-primary">Abrir a biblioteca</Link>
-        <a href={GITHUB} className="btn btn-ghost">Ver no GitHub</a>
+        <Action href="/library" variant="primary">Abrir a biblioteca</Action>
+        <Action href={GITHUB} external>Ver no GitHub</Action>
       </div>
       <Lyra className="t-lyra pointer-events-none hidden min-[821px]:dark:block" />
       <p aria-hidden data-reveal="fade" className="t-vword">Epilogue</p>

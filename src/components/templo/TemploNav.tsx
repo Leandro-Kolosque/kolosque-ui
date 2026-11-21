@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useLenis } from "lenis/react";
@@ -7,18 +7,44 @@ import { useChapterScroll } from "@/components/temple/useChapterScroll";
 import { temploNav } from "@/data/templo";
 import Mark from "./Mark";
 
-// Dia e noite em um botão só. A escolha fica salva (next-themes) e vale para o site inteiro.
+// Noite e dia numa pílula. O marcador desliza e estica no caminho; o tema só troca quando ele chega, porque o
+// next-themes desliga as transições no instante da troca e cortaria o movimento no meio.
+// A escolha fica salva (next-themes) e vale para o site inteiro. No celular, só os ícones.
+const MODES = [["dark", "Noite", Moon], ["light", "Dia", Sun]] as const;
+
 function DayNight() {
   const { resolvedTheme, setTheme } = useTheme();
   const [ready, setReady] = useState(false);
+  const [going, setGoing] = useState<string | null>(null);
+  const timer = useRef(0);
   useEffect(() => setReady(true), []);
+  useEffect(() => () => clearTimeout(timer.current), []);
   // Até montar, o servidor não sabe o tema salvo: assume noite (o padrão da /templo) para o HTML bater na hidratação.
-  const night = ready ? resolvedTheme !== "light" : true;
+  const current = ready ? (resolvedTheme === "light" ? "light" : "dark") : "dark";
+  const on = going ?? current;
+
+  const pick = (key: string) => {
+    if (key === on) return;
+    clearTimeout(timer.current);
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return setTheme(key);
+    setGoing(key);
+    timer.current = window.setTimeout(() => {
+      setTheme(key);
+      setGoing(null);
+    }, 340);
+  };
+
   return (
-    <button type="button" className="t-icon" onClick={() => setTheme(night ? "light" : "dark")}
-      aria-label={night ? "Ver o templo de dia" : "Ver o templo à noite"}>
-      {ready ? (night ? <Sun size={17} strokeWidth={1.5} /> : <Moon size={17} strokeWidth={1.5} />) : <span className="size-[17px]" />}
-    </button>
+    <div role="group" aria-label="Tema" className="t-tg" data-on={on}>
+      <span aria-hidden className="t-tg-knob" />
+      {MODES.map(([key, label, Icon]) => (
+        <button key={key} type="button" aria-pressed={on === key} onClick={() => pick(key)}
+          aria-label={key === "dark" ? "Ver o templo à noite" : "Ver o templo de dia"}>
+          <Icon size={14} strokeWidth={1.5} aria-hidden />
+          <span aria-hidden>{label}</span>
+        </button>
+      ))}
+    </div>
   );
 }
 
@@ -80,7 +106,7 @@ export default function TemploNav() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2 max-lg:ml-auto lg:ml-6">
+        <div className="flex items-center gap-3 max-lg:ml-auto lg:ml-8">
           <DayNight />
           <button type="button" className="t-burger lg:hidden" onClick={() => setMenu(!menu)}
             aria-label={menu ? "Fechar menu" : "Abrir menu"} aria-expanded={menu} aria-controls="t-sheet">
