@@ -1,8 +1,10 @@
 // Imagens do diorama já processadas, em public/templo/diorama/<nome>.webp, com o tamanho de cada uma
 // (a proporção define a largura do plano antes de a imagem carregar). Enquanto um nome não está aqui,
 // a cena usa o placeholder desenhado em paint.ts. O script que processa as gravuras geradas vai escrever
-// esta lista; por enquanto ela está vazia.
-export const DIORAMA: Record<string, { w: number; h: number }> = {};
+// esta lista (node scripts/diorama.js .).
+export const DIORAMA: Record<string, { w: number; h: number }> = {
+  "portal": { w: 1620, h: 2400 },
+};
 
 // Recortes de gravura que já existem no projeto (eram do primeiro plano antigo) e servem de provisório
 // para peças pequenas: braseiros, acantos, ruínas, pergaminhos.

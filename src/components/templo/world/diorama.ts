@@ -56,21 +56,28 @@ function layout() {
   for (const x of [-16, 0, 16]) P.push({ name: "escadaria", paint: "escadaria", x, y: 0, z: -6, h: UP });
   torch(-3.6, UP, -7.6, 2.2);
   torch(3.6, UP, -7.6, 2.2);
-  P.push({ name: "portal", paint: "portal", x: 0, y: UP, z: -9, h: 13.5, pass: true });
-  // o muro continua o portal dos dois lados até sair da tela; as trepadeiras caem do alto dele
+  // a largura do portal sai da proporção da gravura (ou do placeholder): muro e musas se ajustam a ela
+  const PORTAL_H = 12.6;
+  const portalAspect = DIORAMA.portal ? DIORAMA.portal.w / DIORAMA.portal.h : 1000 / 1180;
+  const half = (PORTAL_H * portalAspect) / 2;
+  P.push({ name: "portal", paint: "portal", x: 0, y: UP, z: -9, h: PORTAL_H, pass: true });
+  // o muro continua o portal dos dois lados até sair da tela (começa escondido atrás da borda dele);
+  // as trepadeiras caem do alto do muro
   const WALL = 7.5;
-  for (const x of [13.2, 28.2, 43.2]) {
+  const start = half - 0.4;
+  for (let k = 0; k < 3; k++) {
+    const x = start + WALL + k * WALL * 2;
     P.push({ name: "muro", paint: "muro", x: -x, y: UP, z: -9.15, h: WALL });
     P.push({ name: "muro", paint: "muro", x, y: UP, z: -9.15, h: WALL, flip: true });
   }
   for (let i = 0; i < 6; i++) {
-    const x = 9.6 + i * 7.4;
+    const x = start + 4 + i * 7.4;
     P.push({ name: "trepadeira", paint: "trepadeira", seed: i, x: -x, y: UP + WALL - 1.6, z: -9.0, h: 2.1, tint: 0.45 });
     P.push({ name: "trepadeira", paint: "trepadeira", seed: i + 9, x: x + 1.8, y: UP + WALL - 1.8, z: -9.0, h: 2.3, tint: 0.45, flip: true });
   }
-  // as musas de pé na frente do muro, sobre plintos altos
-  P.push({ name: "musa-esquerda", paint: "musa", seed: 1, x: -9.4, y: UP, z: -7.4, h: 7.4 });
-  P.push({ name: "musa-direita", paint: "musa", seed: 2, x: 9.4, y: UP, z: -7.4, h: 7.4 });
+  // as musas de pé na frente do muro, sobre plintos altos, logo ao lado do portal
+  P.push({ name: "musa-esquerda", paint: "musa", seed: 1, x: -(half + 3.4), y: UP, z: -7.4, h: 7.4 });
+  P.push({ name: "musa-direita", paint: "musa", seed: 2, x: half + 3.4, y: UP, z: -7.4, h: 7.4 });
   both({ name: "ciprestes", paint: "cipreste", x: -14, y: UP, z: -30, h: 14, sway: 0.08 });
   both({ name: "ciprestes", paint: "cipreste", x: -22, y: 0, z: -24, h: 15, sway: 0.08 });
   both({ name: "ciprestes", paint: "cipreste", x: -31, y: 0, z: -40, h: 19, sway: 0.08 });

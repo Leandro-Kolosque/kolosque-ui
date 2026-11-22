@@ -40,7 +40,7 @@ const v = (x: number, y: number, z: number) => new Vector3(x, y, z);
 //   4 Epílogo     subindo pelo Apolo até o céu
 //   5 Colofão     só o céu e as estrelas
 const PATH: { shot?: number; p: Vector3; t: Vector3; fov: number }[] = [
-  { shot: 0, p: v(0, 2.3, 17), t: v(0, 5.4, -20), fov: 40 },
+  { shot: 0, p: v(0, 2.3, 17), t: v(0, 5.9, -20), fov: 40 },
   { p: v(0, 3.3, -4), t: v(0, 4.0, -40), fov: 44 },
   { shot: 1, p: v(0, 3.6, -22), t: v(0, 4.6, -70), fov: 46 },
   { p: v(0, 3.6, -90), t: v(0, 4.2, -130), fov: 46 },
