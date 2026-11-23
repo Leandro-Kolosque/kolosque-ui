@@ -13,11 +13,15 @@ async function raw(file, crop) {
 }
 
 // Fundo branco ligado às bordas vira transparente; a borda do objeto ganha alfa parcial pela claridade.
-function removeWhite({ data, w, h }, minHole = 1500) {
+// holeMin: os vãos fechados (ex.: entre balaústres) só viram fundo se forem branco quase puro; o mármore claro
+// fica um pouco abaixo disso e não é furado.
+// fromSides = false: a peça emenda de lado (o muro), então o fundo só é procurado a partir do alto e da base.
+function removeWhite({ data, w, h }, minHole = 1500, holeMin = 228, fromSides = true) {
+  let floor = 228;
   const isBg = (i) => {
     const r = data[i], g = data[i + 1], b = data[i + 2];
     const mx = Math.max(r, g, b), mn = Math.min(r, g, b);
-    return mn > 228 && mx - mn < 20;
+    return mn > floor && mx - mn < 20;
   };
   const seen = new Uint8Array(w * h);
   const fill = (seeds, minArea) => {
@@ -43,9 +47,10 @@ function removeWhite({ data, w, h }, minHole = 1500) {
   };
   const border = [];
   for (let x = 0; x < w; x++) border.push(x, (h - 1) * w + x);
-  for (let y = 0; y < h; y++) border.push(y * w, y * w + w - 1);
+  if (fromSides) for (let y = 0; y < h; y++) border.push(y * w, y * w + w - 1);
   fill(border, 0);
   // vãos fechados (entre as pernas do trípode, entre blocos): brancos grandes também são fundo
+  floor = holeMin;
   for (let p = 0; p < w * h; p++) if (!seen[p] && isBg(p * 4)) fill([p], minHole);
   for (let p = 0; p < w * h; p++) if (seen[p] === 2) seen[p] = 0;
   // antisserrilhado: pixels claros encostados no fundo ficam parcialmente transparentes

@@ -64,9 +64,10 @@ function layout() {
   // o muro continua o portal dos dois lados até sair da tela (começa escondido atrás da borda dele);
   // as trepadeiras caem do alto do muro
   const WALL = 7.5;
+  const wallW = WALL * (DIORAMA.muro ? DIORAMA.muro.w / DIORAMA.muro.h : 2);
   const start = half - 0.4;
   for (let k = 0; k < 3; k++) {
-    const x = start + WALL + k * WALL * 2;
+    const x = start + wallW / 2 + k * wallW;
     P.push({ name: "muro", paint: "muro", x: -x, y: UP, z: -9.15, h: WALL });
     P.push({ name: "muro", paint: "muro", x, y: UP, z: -9.15, h: WALL, flip: true });
   }

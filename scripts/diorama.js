@@ -22,6 +22,12 @@ const TEXTURES = new Set(["piso", "ceu-nuvens"]);
 // maior lado na saída: as peças que enchem a tela pedem mais pixels
 const MAX = { portal: 2400, apolo: 2400, abside: 2048, piso: 1024 };
 const DEFAULT_MAX = 1800;
+// a partir de que fração da imagem um vão fechado de branco quase puro vira fundo (o resto é brilho do mármore
+// e fica); a balaustrada do muro tem vãos pequenos entre os balaústres
+const HOLE = { muro: 0.0005 };
+const DEFAULT_HOLE = 0.004;
+// peças que emendam lado a lado: o fundo não entra pelas bordas laterais
+const TILES = new Set(["muro"]);
 
 async function hasTransparency(file) {
   const m = await sharp(file).metadata();
@@ -51,8 +57,7 @@ async function hasTransparency(file) {
     if (await hasTransparency(file)) {
       defringe(img);
     } else {
-      // vãos brancos fechados só contam como fundo se forem grandes (0,4% da imagem): o brilho do mármore fica
-      removeWhite(img, Math.round(img.w * img.h * 0.004));
+      removeWhite(img, Math.round(img.w * img.h * (HOLE[name] ?? DEFAULT_HOLE)), 246, !TILES.has(name));
     }
     keepLargest(img, 0.004);
     await save(img, `${name}.webp`, max, max, OUT);
