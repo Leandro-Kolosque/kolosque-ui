@@ -24,10 +24,14 @@ const MAX = { portal: 2400, apolo: 2400, abside: 2048, piso: 1024 };
 const DEFAULT_MAX = 1800;
 // a partir de que fração da imagem um vão fechado de branco quase puro vira fundo (o resto é brilho do mármore
 // e fica); a balaustrada do muro tem vãos pequenos entre os balaústres
-const HOLE = { muro: 0.0005 };
+// as plantas têm muitos vãos pequenos entre folhas e ramos
+const HOLE = { muro: 0.0005, trepadeira: 0.00015, "folhagem-baixa": 0.00015 };
 const DEFAULT_HOLE = 0.004;
 // peças que emendam lado a lado: o fundo não entra pelas bordas laterais
-const TILES = new Set(["muro"]);
+const TILES = new Set(["muro", "escadaria"]);
+// a escadaria gerada é estreita e afina nas pontas: fica só a faixa do meio (dentro do degrau mais curto),
+// que a cena repete na horizontal ao longo de toda a frente do terraço
+const SLICE = { escadaria: [0.15, 0.85] };
 
 async function hasTransparency(file) {
   const m = await sharp(file).metadata();
@@ -53,7 +57,13 @@ async function hasTransparency(file) {
       sizes[name] = { w: m.width, h: m.height };
       continue;
     }
-    const img = await raw(file);
+    let crop;
+    if (SLICE[name]) {
+      const m = await sharp(file).metadata();
+      const [a, b] = SLICE[name];
+      crop = { left: Math.round(m.width * a), top: 0, width: Math.round(m.width * (b - a)), height: m.height };
+    }
+    const img = await raw(file, crop);
     if (await hasTransparency(file)) {
       defringe(img);
     } else {

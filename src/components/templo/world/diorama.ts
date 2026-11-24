@@ -29,6 +29,8 @@ type Piece = {
   sway?: number;
   /** a câmera atravessa esta peça: ela some quando a câmera chega perto */
   pass?: boolean;
+  /** largura total: a imagem se repete na horizontal até cobri-la (a escadaria) */
+  span?: number;
 };
 
 const UP = 1.2; // altura do terraço (topo da escadaria)
@@ -47,13 +49,14 @@ function layout() {
   };
 
   // ---------------------------------------------------------------- Propileus
-  P.push({ name: "folhagem-baixa", cut: "acantos", x: -5.6, y: -0.25, z: 7.6, h: 2.4, sway: 0.05 });
-  P.push({ name: "folhagem-baixa", cut: "acantos", x: 6.6, y: -0.3, z: 8.2, h: 2.2, flip: true, sway: 0.05 });
+  // acantos só nos cantos de baixo, para não cobrir o índice dos capítulos nem o meio do KOLOSQUE
+  P.push({ name: "folhagem-baixa", cut: "acantos", x: -8.4, y: -0.35, z: 7.6, h: 1.5, sway: 0.05 });
+  P.push({ name: "folhagem-baixa", cut: "acantos", x: 9.2, y: -0.4, z: 8.2, h: 1.4, flip: true, sway: 0.05 });
   P.push({ cut: "blocos", x: -10.5, y: 0, z: 2.5, h: 1.5 });
   P.push({ cut: "fragmentos", x: 9.8, y: 0, z: 3.5, h: 0.8 });
   torch(-6.2, 0, -1.5, 2.6);
   torch(6.2, 0, -1.5, 2.6);
-  for (const x of [-16, 0, 16]) P.push({ name: "escadaria", paint: "escadaria", x, y: 0, z: -6, h: UP });
+  P.push({ name: "escadaria", paint: "escadaria", x: 0, y: 0, z: -6, h: UP, span: 54 });
   torch(-3.6, UP, -7.6, 2.2);
   torch(3.6, UP, -7.6, 2.2);
   // a largura do portal sai da proporção da gravura (ou do placeholder): muro e musas se ajustam a ela
@@ -72,9 +75,10 @@ function layout() {
     P.push({ name: "muro", paint: "muro", x, y: UP, z: -9.15, h: WALL, flip: true });
   }
   for (let i = 0; i < 6; i++) {
-    const x = start + 4 + i * 7.4;
-    P.push({ name: "trepadeira", paint: "trepadeira", seed: i, x: -x, y: UP + WALL - 1.6, z: -9.0, h: 2.1, tint: 0.45 });
-    P.push({ name: "trepadeira", paint: "trepadeira", seed: i + 9, x: x + 1.8, y: UP + WALL - 1.8, z: -9.0, h: 2.3, tint: 0.45, flip: true });
+    const x = start + 3.5 + i * 7.2;
+    const h = i % 2 ? 2.5 : 2.1; // alturas alternadas para os ramos não caírem todos no mesmo ponto
+    P.push({ name: "trepadeira", paint: "trepadeira", seed: i, x: -x, y: UP + WALL - h * 0.9, z: -9.0, h, tint: 0.45, flip: i % 2 === 1 });
+    P.push({ name: "trepadeira", paint: "trepadeira", seed: i + 9, x: x + 1.5, y: UP + WALL - (4.6 - h) * 0.9, z: -9.02, h: 4.6 - h, tint: 0.45, flip: i % 2 === 0 });
   }
   // as musas de pé na frente do muro, sobre plintos altos, logo ao lado do portal
   P.push({ name: "musa-esquerda", paint: "musa", seed: 1, x: -(half + 3.4), y: UP, z: -7.4, h: 7.4 });
@@ -186,7 +190,9 @@ export function buildDiorama(scene: Scene, shared: Shared, o: { motion: boolean;
   const passing: { mesh: Mesh; z: number }[] = [];
   for (const p of P) {
     const { tex, aspect } = source(p);
-    const mesh = layerMesh(shared, tex, p.h * aspect * (p.flip ? -1 : 1), p.h, { tint: BORDO, tintAmt: p.tint ?? 0, sway: p.sway ?? 0 });
+    const w = p.span ?? p.h * aspect;
+    if (p.span) repeatTexture(tex);
+    const mesh = layerMesh(shared, tex, w * (p.flip ? -1 : 1), p.h, { tint: BORDO, tintAmt: p.tint ?? 0, sway: p.sway ?? 0, repeat: [p.span ? p.span / (p.h * aspect) : 1, 1] });
     mesh.position.set(p.x, p.y, p.z);
     if (p.rotY) mesh.rotation.y = p.rotY;
     group.add(mesh);
