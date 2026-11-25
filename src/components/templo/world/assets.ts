@@ -3,6 +3,7 @@
 // a cena usa o placeholder desenhado em paint.ts. O script que processa as gravuras geradas vai escrever
 // esta lista (node scripts/diorama.js .).
 export const DIORAMA: Record<string, { w: number; h: number }> = {
+  "ciprestes": { w: 573, h: 1477 },
   "escadaria": { w: 1400, h: 452 },
   "folhagem-baixa": { w: 1800, h: 411 },
   "muro": { w: 1774, h: 749 },

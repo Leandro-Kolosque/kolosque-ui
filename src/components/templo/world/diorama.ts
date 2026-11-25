@@ -83,9 +83,10 @@ function layout() {
   // as musas de pé na frente do muro, sobre plintos altos, logo ao lado do portal
   P.push({ name: "musa-esquerda", paint: "musa", seed: 1, x: -(half + 3.4), y: UP, z: -7.4, h: 7.4 });
   P.push({ name: "musa-direita", paint: "musa", seed: 2, x: half + 3.4, y: UP, z: -7.4, h: 7.4 });
-  both({ name: "ciprestes", paint: "cipreste", x: -14, y: UP, z: -30, h: 14, sway: 0.08 });
-  both({ name: "ciprestes", paint: "cipreste", x: -22, y: 0, z: -24, h: 15, sway: 0.08 });
-  both({ name: "ciprestes", paint: "cipreste", x: -31, y: 0, z: -40, h: 19, sway: 0.08 });
+  // ciprestes atrás do muro: altos o bastante para a copa passar da balaustrada
+  both({ name: "ciprestes", paint: "cipreste", x: -13, y: UP, z: -26, h: 19, sway: 0.08 });
+  both({ name: "ciprestes", paint: "cipreste", x: -24, y: 0, z: -22, h: 18, sway: 0.08 });
+  both({ name: "ciprestes", paint: "cipreste", x: -34, y: 0, z: -38, h: 25, sway: 0.08 });
 
   // ---------------------------------------------------------------- Pinacoteca: o corredor
   for (let i = 0; i < 10; i++) {

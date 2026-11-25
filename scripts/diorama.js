@@ -25,7 +25,7 @@ const DEFAULT_MAX = 1800;
 // a partir de que fração da imagem um vão fechado de branco quase puro vira fundo (o resto é brilho do mármore
 // e fica); a balaustrada do muro tem vãos pequenos entre os balaústres
 // as plantas têm muitos vãos pequenos entre folhas e ramos
-const HOLE = { muro: 0.0005, trepadeira: 0.00015, "folhagem-baixa": 0.00015 };
+const HOLE = { muro: 0.0005, trepadeira: 0.00015, "folhagem-baixa": 0.00015, ciprestes: 0.00015 };
 const DEFAULT_HOLE = 0.004;
 // peças que emendam lado a lado: o fundo não entra pelas bordas laterais
 const TILES = new Set(["muro", "escadaria"]);
