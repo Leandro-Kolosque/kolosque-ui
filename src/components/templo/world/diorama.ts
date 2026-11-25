@@ -130,8 +130,9 @@ function layout() {
     P.push({ name: "coluna-a", paint: "coluna", seed: 21, x: 6.2, y: UP, z, h: 10.5, flip: true });
   }
   P.push({ name: "abside", paint: "abside", x: 0, y: UP, z: -179, h: 17 });
-  P.push({ name: "apolo", paint: "apolo", x: 0, y: UP + 3.2, z: -172, h: 8 });
-  P.push({ name: "pedestal", paint: "pedestal", x: 0, y: UP, z: -171.6, h: 3.2 });
+  // a estátua tem pouco mais que o dobro da altura do pedestal, e a base dela pisa no topo dele
+  P.push({ name: "apolo", paint: "apolo", x: 0, y: UP + 3.55, z: -172, h: 7.6 });
+  P.push({ name: "pedestal", paint: "pedestal", x: 0, y: UP, z: -171.6, h: 3.6 });
   P.push({ name: "nuvens-1", paint: "nuvem", seed: 1, x: -2.6, y: 0.9, z: -170.6, h: 2.4 });
   P.push({ name: "nuvens-3", paint: "nuvem", seed: 2, x: 2.7, y: 0.9, z: -170.4, h: 2.2, flip: true });
   P.push({ name: "nuvens-2", paint: "nuvem", seed: 3, x: -5.4, y: 1.0, z: -174, h: 4 });
