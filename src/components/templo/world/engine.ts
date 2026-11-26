@@ -137,7 +137,7 @@ export function createWorld(canvas: HTMLCanvasElement, opts: { night: boolean; r
   function layoutWord() {
     if (!word) return;
     layoutCam.aspect = camera.aspect;
-    const p = PATH[0].p.clone(), t = PATH[0].t;
+    const p = PATH[0].p.clone(), t = PATH[0].t.clone();
     layoutCam.fov = framed(p, t, PATH[0].fov);
     layoutCam.position.copy(p);
     layoutCam.lookAt(t);
@@ -185,11 +185,13 @@ export function createWorld(canvas: HTMLCanvasElement, opts: { night: boolean; r
   };
   if (motion && matchMedia("(hover: hover) and (pointer: fine)").matches) addEventListener("pointermove", onPointer, { passive: true });
 
-  // Ajuste para quadro alto: recua no eixo de visão e abre a lente. Devolve a fov ajustada.
+  // Ajuste para quadro alto: recua no eixo de visão, abre a lente e levanta o olhar, para o portal descer no
+  // quadro e aparecer abaixo do texto (no celular o título ocupa o terço de cima). Devolve a fov ajustada.
   function framed(pos: Vector3, target: Vector3, fov: number) {
     if (tall <= 0) return fov;
     d.subVectors(pos, target).normalize();
     pos.addScaledVector(d, tall * 6);
+    target.y += tall * 6.5;
     return fov * (1 + tall * 0.32);
   }
 

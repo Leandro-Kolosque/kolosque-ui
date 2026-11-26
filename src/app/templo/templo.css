@@ -465,6 +465,22 @@ html:not(.dark) .t-hero::before {
     padding-top: calc(var(--nav-h) + clamp(16px, 3vh, 40px))
 }
 
+/* De dia o texto cai em cima do muro e dos veios do mármore. Um véu de papel acompanha o próprio bloco de texto
+   (e o índice dos capítulos), com a borda sumindo aos poucos, para a gravura continuar visível em volta. */
+html:not(.dark) .t-hero-top::before,
+html:not(.dark) .t-hero-foot::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: calc(var(--nav-h) - 8px) -96px -56px -72px;
+    pointer-events: none;
+    background: radial-gradient(closest-side, rgb(var(--scrim) / .94), rgb(var(--scrim) / .86) 55%, rgb(var(--scrim) / 0))
+}
+
+html:not(.dark) .t-hero-foot::before {
+    inset: -40px -80px -24px -72px
+}
+
 .t-hero-spacer {
     flex: 1 1 auto;
     min-height: clamp(160px, 28vh, 320px)

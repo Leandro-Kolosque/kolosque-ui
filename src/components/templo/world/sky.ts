@@ -106,7 +106,7 @@ export function buildSky(shared: Shared) {
     mat.uniforms.uCamWorld.value.copy(cam.matrixWorld);
     mat.uniforms.uDpr.value = dpr;
     // no quadro alto do celular, a lua chega mais perto do centro para não sair da tela
-    dir.set(dirWide.x * (1 - tall * 0.62), dirWide.y * (1 + tall * 0.35), dirWide.z).normalize();
+    dir.set(dirWide.x * (1 - tall * 0.5), dirWide.y * (1 + tall * 0.7), dirWide.z).normalize();
     moon.position.copy(cam.position).addScaledVector(dir, 400);
     moon.lookAt(cam.position);
     moon.scale.setScalar(64);

@@ -98,8 +98,8 @@ export async function buildWordmark(scene: Scene, text = "KOLOSQUE"): Promise<Wo
     };
     const L = hit(-1, 0), R = hit(1, 0);
     scale = ((R.x - L.x) * (narrow ? 0.94 : 0.88)) / ink.w;
-    // no celular a palavra fica no vão entre o botão da Hero e o índice de capítulos
-    const base = hit(0, narrow ? -0.34 : -0.6);
+    // no celular a palavra fica sobre a escadaria, entre o portal e o índice de capítulos
+    const base = hit(0, narrow ? -0.5 : -0.6);
     group.scale.setScalar(scale);
     group.position.set(-ink.cx * scale, base.y, WORD_Z);
   }
