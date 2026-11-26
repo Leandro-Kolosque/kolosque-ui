@@ -129,14 +129,17 @@ function layout() {
     P.push({ name: "coluna-a", paint: "coluna", seed: 20, x: -6.2, y: UP, z, h: 10.5 });
     P.push({ name: "coluna-a", paint: "coluna", seed: 21, x: 6.2, y: UP, z, h: 10.5, flip: true });
   }
-  P.push({ name: "abside", paint: "abside", x: 0, y: UP, z: -179, h: 17 });
+  // a abside é grande e fica perto o bastante para o Apolo caber no nicho dela
+  P.push({ name: "abside", paint: "abside", x: 0, y: UP, z: -175.5, h: 22 });
   // a estátua tem pouco mais que o dobro da altura do pedestal, e a base dela pisa no topo dele
   P.push({ name: "apolo", paint: "apolo", x: 0, y: UP + 3.55, z: -172, h: 7.6 });
   P.push({ name: "pedestal", paint: "pedestal", x: 0, y: UP, z: -171.6, h: 3.6 });
-  P.push({ name: "nuvens-1", paint: "nuvem", seed: 1, x: -2.6, y: 0.9, z: -170.6, h: 2.4 });
-  P.push({ name: "nuvens-3", paint: "nuvem", seed: 2, x: 2.7, y: 0.9, z: -170.4, h: 2.2, flip: true });
-  P.push({ name: "nuvens-2", paint: "nuvem", seed: 3, x: -5.4, y: 1.0, z: -174, h: 4 });
-  P.push({ name: "nuvens-2", paint: "nuvem", seed: 4, x: 5.6, y: 1.0, z: -174.4, h: 4, flip: true });
+  // nuvens dos lados do pedestal, sem cobrir o painel dele (que vai receber a inscrição da stack);
+  // não há nuvem pequena: a larga entra menor e espelhada no lugar dela
+  P.push({ name: "nuvens-1", paint: "nuvem", seed: 1, x: -5.8, y: UP - 0.3, z: -170.4, h: 1.7 });
+  P.push({ name: "nuvens-1", paint: "nuvem", seed: 2, x: 6.2, y: UP - 0.4, z: -170.2, h: 1.4, flip: true });
+  P.push({ name: "nuvens-2", paint: "nuvem", seed: 3, x: -6.6, y: UP - 0.2, z: -173.6, h: 5 });
+  P.push({ name: "nuvens-2", paint: "nuvem", seed: 4, x: 6.9, y: UP - 0.2, z: -174, h: 4.4, flip: true });
   torch(-3.2, UP, -167.5, 1.6);
   torch(3.2, UP, -167.5, 1.6);
   // o facho acende o Apolo: uma luz no alto, à esquerda, e outra mais fraca no peito
