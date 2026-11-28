@@ -93,7 +93,8 @@ function layout() {
   // ---------------------------------------------------------------- Pinacoteca: o corredor
   for (let i = 0; i < 10; i++) {
     const z = -16 - i * 8;
-    const name = i % 2 ? "coluna-b" : "coluna-a";
+    // enquanto a coluna gasta (coluna-b) não existe, a coluna-a ocupa os dois lugares
+    const name = i % 2 && DIORAMA["coluna-b"] ? "coluna-b" : "coluna-a";
     P.push({ name, paint: "coluna", seed: i, x: -4.6, y: UP, z, h: 10.5 });
     P.push({ name, paint: "coluna", seed: i + 1, x: 4.6, y: UP, z, h: 10.5, flip: true });
     if (i % 2 === 0) {

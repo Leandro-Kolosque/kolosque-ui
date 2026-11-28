@@ -6,6 +6,7 @@ export const DIORAMA: Record<string, { w: number; h: number }> = {
   "abside": { w: 965, h: 1481 },
   "apolo": { w: 559, h: 1485 },
   "ciprestes": { w: 573, h: 1477 },
+  "coluna-a": { w: 339, h: 1479 },
   "escadaria": { w: 1400, h: 452 },
   "folhagem-baixa": { w: 1800, h: 411 },
   "lamparinas": { w: 1800, h: 579 },
