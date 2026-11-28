@@ -40,6 +40,8 @@ function layout() {
   const P: Piece[] = [];
   // luzes: tochas (com chama, um pouco acima do topo do tripé) e a luz do facho sobre o Apolo (sem chama)
   const L: { x: number; y: number; z: number; w: number; flame: boolean }[] = [];
+  // chamas sem luz própria (as velas do altar: pequenas demais para contar como tocha)
+  const F: { x: number; y: number; z: number; s?: number }[] = [];
   const both = (p: Piece) => {
     P.push({ ...p, seed: (p.seed ?? 0) * 2 + 1 }, { ...p, x: -p.x, flip: !p.flip, seed: (p.seed ?? 0) * 2 + 2 });
   };
@@ -136,23 +138,32 @@ function layout() {
   P.push({ name: "pedestal", paint: "pedestal", x: 0, y: UP, z: -171.6, h: 3.6 });
   // nuvens dos lados do pedestal, sem cobrir o painel dele (que vai receber a inscrição da stack);
   // não há nuvem pequena: a larga entra menor e espelhada no lugar dela
-  P.push({ name: "nuvens-1", paint: "nuvem", seed: 1, x: -5.8, y: UP - 0.3, z: -170.4, h: 1.7 });
-  P.push({ name: "nuvens-1", paint: "nuvem", seed: 2, x: 6.2, y: UP - 0.4, z: -170.2, h: 1.4, flip: true });
+  P.push({ name: "nuvens-1", paint: "nuvem", seed: 1, x: -6.2, y: UP - 0.3, z: -170.4, h: 1.7 });
+  P.push({ name: "nuvens-3", paint: "nuvem", seed: 2, x: 6.4, y: UP - 0.4, z: -170.2, h: 1.9, flip: true });
   P.push({ name: "nuvens-2", paint: "nuvem", seed: 3, x: -6.6, y: UP - 0.2, z: -173.6, h: 5 });
   P.push({ name: "nuvens-2", paint: "nuvem", seed: 4, x: 6.9, y: UP - 0.2, z: -174, h: 4.4, flip: true });
-  torch(-3.2, UP, -167.5, 1.6);
-  torch(3.2, UP, -167.5, 1.6);
+  // o altar de lamparinas na frente do pedestal: quatro velas acesas (na Fase 6, uma para cada pilar das Ordens)
+  const ALTAR_H = 1.0, ALTAR_Z = -170.9;
+  const altarAspect = DIORAMA.lamparinas ? DIORAMA.lamparinas.w / DIORAMA.lamparinas.h : 4;
+  const altarW = ALTAR_H * altarAspect;
+  P.push({ name: "lamparinas", paint: "pedestal", x: 0, y: UP, z: ALTAR_Z, h: ALTAR_H });
+  // posição de cada pavio na gravura: fração da largura e da altura
+  for (const [fx, fy] of [[0.1625, 0.71], [0.3775, 0.61], [0.64, 0.97], [0.835, 0.73]]) {
+    F.push({ x: (fx - 0.5) * altarW, y: UP + fy * ALTAR_H + 0.05, z: ALTAR_Z + 0.02, s: 0.3 });
+  }
+  L.push({ x: -altarW * 0.25, y: UP + 0.9, z: ALTAR_Z + 0.3, w: 0.8, flame: false });
+  L.push({ x: altarW * 0.25, y: UP + 0.9, z: ALTAR_Z + 0.3, w: 0.8, flame: false });
   // o facho acende o Apolo: uma luz no alto, à esquerda, e outra mais fraca no peito
   L.push({ x: -1.2, y: 10.5, z: -169.4, w: 1.5, flame: false });
   L.push({ x: 0.8, y: 6, z: -169.6, w: 0.7, flame: false });
 
-  return { P, L };
+  return { P, L, F };
 }
 
 export function buildDiorama(scene: Scene, shared: Shared, o: { motion: boolean; onLoad: () => void }) {
   const group = new Group();
   scene.add(group);
-  const { P, L } = layout();
+  const { P, L, F } = layout();
 
   // ---------------------------------------------------------------- texturas
   const loader = new TextureLoader();
@@ -232,7 +243,7 @@ export function buildDiorama(scene: Scene, shared: Shared, o: { motion: boolean;
   });
 
   const fx = buildFx(scene, shared, {
-    flames: L.filter((l) => l.flame),
+    flames: [...L.filter((l) => l.flame), ...F],
     petals: [-6.5, 6.5, -92, -14],
     shaft: { x: -1.3, y: 9.6, z: -173.2, w: 4.6, h: 16.5, tilt: 0.2 },
     motion: o.motion,

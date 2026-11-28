@@ -35,7 +35,8 @@ function points(n: number, fill: (i: number, pos: Float32Array, seed: Float32Arr
 
 export type Shaft = { x: number; y: number; z: number; w: number; h: number; tilt: number };
 
-type Flame = { x: number; y: number; z: number };
+/** s: tamanho da chama em metros (1,1 numa tocha; bem menor numa vela) */
+type Flame = { x: number; y: number; z: number; s?: number };
 
 export function buildFx(scene: Scene, shared: Shared, o: { flames: Flame[]; petals: [number, number, number, number]; shaft: Shaft; motion: boolean }) {
   const halfH = { value: 400 };
@@ -50,10 +51,13 @@ export function buildFx(scene: Scene, shared: Shared, o: { flames: Flame[]; peta
 
   // ---------------------------------------------------------------- chamas
   const lit = o.flames;
+  const size = new Float32Array(lit.length);
   const flameGeo = points(lit.length, (i, pos, seed) => {
+    size[i] = lit[i].s ?? 1.1;
     pos.set([lit[i].x, lit[i].y, lit[i].z], i * 3);
     seed[i] = r();
   });
+  flameGeo.setAttribute("aSize", new BufferAttribute(size, 1));
   const flameMat = new ShaderMaterial({
     transparent: true,
     depthWrite: false,
@@ -61,10 +65,11 @@ export function buildFx(scene: Scene, shared: Shared, o: { flames: Flame[]; peta
     uniforms: { ...shared, uHalfH: halfH },
     vertexShader: SIZE_VERT + /* glsl */ `
       attribute float aSeed;
+      attribute float aSize;
       varying float vSeed;
       void main() {
         vec4 mv = modelViewMatrix * vec4(position, 1.0);
-        gl_PointSize = pointSize(1.1, mv);
+        gl_PointSize = pointSize(aSize, mv);
         gl_Position = projectionMatrix * mv;
         vSeed = aSeed;
       }`,
